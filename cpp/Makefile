@@ -23,16 +23,16 @@ native: $(PROJECT)
 web: $(PROJECT).js
 all: $(PROJECT) $(PROJECT).js
 
-debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
-debug:	$(PROJECT)
+debug: CFLAGS_nat := $(CFLAGS_nat_debug)
+debug: $(PROJECT)
 
-debug-web:	CFLAGS_web := $(CFLAGS_web_debug)
-debug-web:	$(PROJECT).js
+debug-web: CFLAGS_web := $(CFLAGS_web_debug)
+debug-web: $(PROJECT).js
 
-web-debug:	debug-web
+web-debug: debug-web
 
 # see https://stackoverflow.com/a/57760267 RE: -lstdc++fs
-$(PROJECT):	source/native.cpp include/
+$(PROJECT): source/native.cpp include/
 	$(CXX) $(CFLAGS_nat) source/native.cpp -o $(PROJECT) -lstdc++fs -lmetis -lz -lcurl -lsfml-graphics -ldw -llzma
 	@echo To build the web version use: make web
 

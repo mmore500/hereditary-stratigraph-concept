@@ -7,7 +7,7 @@
 namespace hstrat {
 
 bool example() {
-  std::cout << "example thing!" << "\n";
+  std::cout << "example thing!" << '\n';
   return true;
 }
 

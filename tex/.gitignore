@@ -1,3 +1,7 @@
+# Created by https://www.toptal.com/developers/gitignore/api/latex
+# Edit at https://www.toptal.com/developers/gitignore?templates=latex
+
+### LaTeX ###
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
@@ -111,9 +115,16 @@ acs-*.bib
 *.glsdefs
 *.lzo
 *.lzs
+*.slg
+*.slo
+*.sls
 
 # uncomment this for glossaries-extra (will ignore makeindex's style files!)
 # *.ist
+
+# gnuplot
+*.gnuplot
+*.table
 
 # gnuplottex
 *-gnuplottex-*
@@ -189,6 +200,9 @@ _minted*
 # scrwfile
 *.wrt
 
+# svg
+svg-inkscape/
+
 # sympy
 *.sout
 *.sympy
@@ -212,6 +226,9 @@ pythontex-files-*/
 *.dpth
 *.md5
 *.auxlock
+
+# titletoc
+*.ptc
 
 # todonotes
 *.tdo
@@ -287,5 +304,14 @@ TSWLatexianTemp*
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
 
-frontiers-2021-draft.pdf
-frontiers-2021.pdf
+### LaTeX Patch ###
+# LIPIcs / OASIcs
+*.vtc
+
+# glossaries
+*.glstex
+
+# End of https://www.toptal.com/developers/gitignore/api/latex
+
+hereditary-stratigraph-concept-draft.pdf
+hereditary-stratigraph-concept.pdf

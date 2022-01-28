@@ -10,7 +10,7 @@
 [![dotos](https://img.shields.io/endpoint?url=https%3A%2F%2Fmmore500.com%2Fhereditary-stratigraph-concept%2Fdoto-badge.json)](https://github.com/mmore500/hereditary-stratigraph-concept/search?q=todo+OR+fixme&type=)
 [![GitHub stars](https://img.shields.io/github/stars/mmore500/hereditary-stratigraph-concept.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/mmore500/hereditary-stratigraph-concept)
 
-Proof of concept work for a method to allow phylogenetic inference on distributed populations.
+Exploratory work on a method to enable phylogenetic inference without centralized tracking.
 
 Check out the live in-browser web app at <https://mmore500.github.io/hereditary-stratigraph-concept>.
 

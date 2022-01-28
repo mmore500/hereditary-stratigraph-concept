@@ -18,8 +18,7 @@
 .DS_Store
 a.out
 a.out.js
-cpp/web/hereditary-stratigraph-concept.js
-cpp/hereditary-stratigraph-concept
+web/hereditary-stratigraph-concept.js
 
 build/
 doc/_build/
