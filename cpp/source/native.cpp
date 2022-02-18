@@ -4,7 +4,6 @@
 
 #include "hstrat/config/Config.hpp"
 #include "hstrat/config/setup_config_native.hpp"
-#include "hstrat/example.hpp"
 
 // This is the main function for the NATIVE version of Hereditary Stratigraph Proof of Concept.
 
@@ -17,5 +16,5 @@ int main(int argc, char* argv[]) {
 
   std::cout << "Hello, world!" << "\n";
 
-  return hstrat::example();
+  return 0;
 }
