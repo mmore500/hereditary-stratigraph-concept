@@ -36,6 +36,7 @@ nb-clean==2.0.2
 nbmetalog==0.2.6
 deprecation==2.1.0
 sympy==1.5.1
+bitarray==2.3.6
 
 # docs
 sphinx==3.1.2
