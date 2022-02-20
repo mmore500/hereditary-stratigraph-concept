@@ -16,6 +16,8 @@ aiosignal==1.2.0
     # via aiohttp
 alabaster==0.7.12
     # via sphinx
+anytree==2.8.0
+    # via -r requirements.in
 async-timeout==4.0.2
     # via aiohttp
 attrs==20.3.0
@@ -322,6 +324,7 @@ seaborn==0.11.0
     # via -r requirements.in
 six==1.16.0
     # via
+    #   anytree
     #   bleach
     #   breathe
     #   exhale
