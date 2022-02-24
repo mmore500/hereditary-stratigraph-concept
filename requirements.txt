@@ -236,6 +236,8 @@ oauthlib==3.1.1
     # via requests-oauthlib
 opencv-python==4.5.1.48
     # via -r requirements.in
+opytional==0.1.0
+    # via -r requirements.in
 osfclient==0.0.5
     # via -r requirements.in
 packaging==21.3

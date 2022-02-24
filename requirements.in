@@ -41,6 +41,7 @@ anytree==2.8.0
 gmpy==1.17
 interval-search==0.1.2
 iterify==0.1.0
+opytional==0.1.0
 
 # docs
 sphinx==3.1.2
