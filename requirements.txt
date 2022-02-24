@@ -138,6 +138,8 @@ ipython==7.16.1
     #   ipykernel
 iterdub==0.2.0
     # via -r requirements.in
+iterify==0.1.0
+    # via -r requirements.in
 iterpop==0.3.4
     # via -r requirements.in
 j2cli[yaml]==0.3.10
