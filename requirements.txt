@@ -120,6 +120,8 @@ imagesize==1.3.0
     # via sphinx
 importlib-resources==5.4.0
     # via jsonschema
+interval-search==0.1.2
+    # via -r requirements.in
 ipykernel==5.5.3
     # via
     #   -r requirements.in

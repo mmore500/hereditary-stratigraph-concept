@@ -39,6 +39,7 @@ sympy==1.5.1
 bitarray==2.3.6
 anytree==2.8.0
 gmpy==1.17
+interval-search==0.1.2
 
 # docs
 sphinx==3.1.2
