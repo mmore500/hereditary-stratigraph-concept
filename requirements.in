@@ -36,7 +36,6 @@ nb-clean==2.0.2
 nbmetalog==0.2.6
 deprecation==2.1.0
 sympy==1.5.1
-bitarray==2.3.6
 anytree==2.8.0
 gmpy==1.17
 interval-search==0.1.2
