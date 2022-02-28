@@ -17,7 +17,9 @@ aiosignal==1.2.0
 alabaster==0.7.12
     # via sphinx
 anytree==2.8.0
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   hstrat
 async-timeout==4.0.2
     # via aiohttp
 attrs==20.3.0
@@ -104,6 +106,10 @@ gitdb==4.0.9
 gitpython==3.1.14
     # via -r requirements.in
 gmpy==1.17
+    # via
+    #   -r requirements.in
+    #   hstrat
+hstrat==0.1.1
     # via -r requirements.in
 hurry.filesize==0.9
     # via nbmetalog
@@ -119,7 +125,9 @@ imagesize==1.3.0
 importlib-resources==5.4.0
     # via jsonschema
 interval-search==0.1.2
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   hstrat
 ipykernel==5.5.3
     # via
     #   -r requirements.in
@@ -139,7 +147,9 @@ iterdub==0.2.0
 iterify==0.1.0
     # via -r requirements.in
 iterpop==0.3.4
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   hstrat
 j2cli[yaml]==0.3.10
     # via -r requirements.in
 jedi==0.18.1
@@ -235,7 +245,9 @@ oauthlib==3.1.1
 opencv-python==4.5.1.48
     # via -r requirements.in
 opytional==0.1.0
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   hstrat
 osfclient==0.0.5
     # via -r requirements.in
 packaging==21.3

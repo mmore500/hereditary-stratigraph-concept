@@ -41,6 +41,7 @@ gmpy==1.17
 interval-search==0.1.2
 iterify==0.1.0
 opytional==0.1.0
+hstrat==0.1.1
 
 # docs
 sphinx==3.1.2
