@@ -7,6 +7,7 @@ import math
 import operator
 import opytional as opyt
 import typing
+import warnings
 
 from .HereditaryStratum import HereditaryStratum
 from .HereditaryStratumOrderedStoreList import HereditaryStratumOrderedStoreList
@@ -578,6 +579,53 @@ class HereditaryStratigraphicColumn:
                 # level; conservatively conclude there is no common ancestor
                 return None
 
+    def GetNthCommonRankWith(
+        self: 'HereditaryStratigraphicColumn',
+        other: 'HereditaryStratigraphicColumn',
+        n: int,
+    ) -> typing.Optional[int]:
+        """Return the nth rank retained by both columns.
+
+        Zero indexed. Returns None if n + 1 common ranks do not exist between
+        self and other.
+        """
+
+        assert n >= 0
+
+        # helper setup
+        self_iter = self._stratum_ordered_store.IterRankDifferentia(
+            get_rank_at_column_index=self.GetRankAtColumnIndex,
+        )
+        other_iter = other._stratum_ordered_store.IterRankDifferentia(
+            get_rank_at_column_index=other.GetRankAtColumnIndex,
+        )
+        self_cur_rank, self_cur_differentia = next(self_iter)
+        other_cur_rank, other_cur_differentia = next(other_iter)
+
+        try:
+            while True:
+                if self_cur_rank == other_cur_rank:
+                    # strata at common rank
+                    if n == 0: return self_cur_rank
+
+                    n -= 1
+                    # advance self
+                    self_cur_rank, self_cur_differentia = next(self_iter)
+                    # advance other
+                    other_cur_rank, other_cur_differentia = next(other_iter)
+                elif self_cur_rank < other_cur_rank:
+                    # current stratum on self column older than on other column
+                    # advance to next-newer stratum on self column
+                    self_cur_rank, self_cur_differentia = next(self_iter)
+                elif self_cur_rank > other_cur_rank:
+                    # current stratum on other column older than on self column
+                    # advance to next-newer stratum on other column
+                    other_cur_rank, other_cur_differentia = next(other_iter)
+
+        except StopIteration:
+            return None
+
+
     def CalcDefinitiveMaxRankOfFirstRetainedDisparityWith(
         self: 'HereditaryStratigraphicColumn',
         other: 'HereditaryStratigraphicColumn',
@@ -639,6 +687,25 @@ class HereditaryStratigraphicColumn:
 
         The true rank of the first disparity with other is guaranteed to never
         be after the returned rank when confidence_level < 0.5.
+
+        If the differentia width and confidence level are configured such that
+        one or more suprious differentia collisions is plausible, this method
+        will never return None.
+
+        Consider two columns that compare identical at all common ranks. If
+        these columns have few enough common ranks that all these collisions
+        could plausibly be spurious then there is not yet enough to support
+        common lineage between the columns so rank 0 must be selected as the
+        estimated site of first retained disparity. If these columns have
+        enough common ranks that all collisions could not plausibly be spurious
+        then the largest rank that could not conceivably be spurious must be
+        selected (and we are guaranteed such a rank exists). It is only when
+        not even one collision could plausibly be spurious that strong enough
+        evidence exists to conclude that there is no disparity.
+
+        For example, the method may return None with 64-bit differentia and 95%
+        confidence level but will never return None with 1-bit differentia and
+        95% confidence level.
         """
 
         assert 0.0 <= confidence_level <= 1.0
@@ -797,13 +864,13 @@ class HereditaryStratigraphicColumn:
             if self_cur_rank == other_cur_rank:
                 # strata at same rank can be compared
                 if self_cur_differentia == other_cur_differentia:
+                    preceding_common_ranks.appendleft(self_cur_rank)
                     # matching differentiae at the same rank,
                     # keep searching for mismatch
                     # advance self and other
                     # must ensure both advance, even if one stops iteration
                     advance_self()
                     advance_other()
-                    preceding_common_ranks.appendleft(self_cur_rank)
                 else:
                     # mismatching differentiae at the same rank
                     preceding_common_ranks.appendleft(self_cur_rank)
@@ -832,7 +899,8 @@ class HereditaryStratigraphicColumn:
             # self has strata ranks beyond the newest found in other
             # conservatively assume mismatch will be with next rank of other
             assert other_iter is None
-            res = other_prev_rank + 1
+            preceding_common_ranks.appendleft(other_prev_rank + 1)
+            res = preceding_common_ranks[-1]
             assert 0 <= res <= self.GetNumStrataDeposited()
             assert 0 <= res <= other.GetNumStrataDeposited()
             return res
@@ -841,7 +909,8 @@ class HereditaryStratigraphicColumn:
             # other has strata ranks beyond the newest found in self
             # conservatively assume mismatch will be with next rank
             assert self_iter is None
-            res = self_prev_rank + 1
+            preceding_common_ranks.appendleft(self_prev_rank + 1)
+            res = preceding_common_ranks[-1]
             assert 0 <= res <= self.GetNumStrataDeposited()
             assert 0 <= res <= other.GetNumStrataDeposited()
             return res
@@ -849,13 +918,13 @@ class HereditaryStratigraphicColumn:
             # no disparate strata found
             # and self and other have the same newest rank
             assert self_iter is None and other_iter is None
-            return None
+            preceding_common_ranks.appendleft(None)
+            return preceding_common_ranks[-1]
 
     def CalcRankOfMrcaBoundsWith(
         self: 'HereditaryStratigraphicColumn',
         other: 'HereditaryStratigraphicColumn',
         confidence_level: float=0.95,
-        bound_type: str='symmetric',
     ) -> typing.Optional[typing.Tuple[int, int]]:
         """Calculate bounds on estimate for the number of depositions elapsed
         along the line of descent before the most recent common ancestor with
@@ -866,12 +935,6 @@ class HereditaryStratigraphicColumn:
         confidence_level : float, optional
             Bounds must capture what probability of containing the true rank of
             the MRCA? Default 0.95.
-        bound_type : {'symmetric', 'hard_upper_bound'}
-            How should the bounds be constructed? If 'symmetric', then true rank
-            of the MRCA will fall above or below the bounds with equal
-            probability. If 'hard_upper_bound' then the true rank of the MRCA
-            is guaranteed to never fall above the bounds but may fall below.
-            Default 'symmetric'.
 
         Returns
         -------
@@ -885,38 +948,71 @@ class HereditaryStratigraphicColumn:
         --------
         CalcRankOfMrcaUncertaintyWith :
             Wrapper to report uncertainty of calculated bounds.
+        CalcRankOfEarliestDetectableMrcaWith :
+            Could any MRCA be detected between self and other? What is the rank
+            of the earliest MRCA that could be reliably detected?
+
+        Notes
+        -----
+        The true rank of the MRCA is guaranteed to never fall above the bounds but may fall below.
+
+        An alternate approach could be to construct the bounds such that the
+        true rank of the MRCA will fall above or below the bounds with equal
+        probability. This would involve setting the confidence level for
+        calculating the first disparity with other to significance_level/2 and
+        the confidence level for calculaing the last comonality with other to
+        1 - significance_level/2. This means the confidence level applied to
+        calculating the first disparity with other would always be <= 0.5.
+        However, shifting the calculated first disparity with other below
+        the definitive max first retained disparity requires confidence level
+        >= 0.5. So, in practice such a symmetric approach would only result in
+        the lower bound being shifted downward. For this reason, it is no longer
+        provided as an option.
+
+        In the absence of evidence to the contrary (i.e., more common
+        strata than spurious differentia collisions alone could plausibly
+        cause), this method assumes no common ancestry between self and other,
+        returning None. This means that if few enough common ranks are shared
+        between self and other (and the differentia bit with is small enough),
+        it may not be possible to detect any common ancestry after accounting
+        for the possibility of spurious differentia collisions (even if common
+        ancestry did exist). So, calls to this method would always return None.
+        Likewise, MRCAs at very early ranks may not be able to be reliably
+        detected due to insufficient evidence. This can lead to cases where
+        columns with true common ancestry have MRCA bounds estimated as None at
+        much higher than the expected failure rate at the given confidence
+        level. Note that with sufficient differentia bit width (i.e., so that
+        even one collision is implausible at the given confidence level) this
+        issue does not occur. Use CalcRankOfEarliestDetectableMrcaWith to
+        determine the earliest rank at which an MRCA could be reliably detected
+        between self and other.
         """
 
         assert 0.0 <= confidence_level <= 1.0
-        significance_level = 1.0 - confidence_level
+
+        if self.CalcRankOfEarliestDetectableMrcaWith(
+            other,
+            confidence_level=confidence_level,
+        ) is None:
+            warnings.warn(
+                'Insufficient common ranks between columns to detect common ' 'ancestry at given confidence level.'
+            )
 
         if self.HasAnyCommonAncestorWith(
             other,
-            confidence_level={
-                'symmetric' : 1.0 - significance_level / 2.0,
-                'hard_upper_bound' : 1.0 - significance_level,
-            }[bound_type],
+            confidence_level=confidence_level,
         ):
-            first_disparity = {
-                'symmetric' : lambda: self.CalcRankOfFirstRetainedDisparityWith(
-                    other,
-                    confidence_level=1.0 - significance_level/2.0
-                ),
-                'hard_upper_bound' : lambda: \
-                    self.CalcDefinitiveMaxRankOfFirstRetainedDisparityWith(
-                        other
-                    ),
-            }[bound_type]()
+            first_disparity \
+                = self.CalcDefinitiveMaxRankOfFirstRetainedDisparityWith(
+                        other,
+                    )
             if first_disparity is None:
                 num_self_deposited = self.GetNumStrataDeposited()
                 num_other_deposited = other.GetNumStrataDeposited()
                 assert num_self_deposited == num_other_deposited
             last_commonality = self.CalcRankOfLastRetainedCommonalityWith(
                 other,
-                confidence_level={
-                    'symmetric' : 1.0 - significance_level / 2.0,
-                    'hard_upper_bound' : 1.0 - significance_level,
-                }[bound_type],
+                confidence_level=confidence_level,
             )
             assert last_commonality is not None
             return (
@@ -929,15 +1025,14 @@ class HereditaryStratigraphicColumn:
         self: 'HereditaryStratigraphicColumn',
         other: 'HereditaryStratigraphicColumn',
         confidence_level: float=0.95,
-        bound_type: str='symmetric',
-    ) -> int:
+    ) -> typing.Optional[int]:
         """Calculate uncertainty of estimate for the number of depositions
         elapsed along the line of descent before the most common recent
         ancestor with other.
 
         Returns 0 if no common ancestor between self and other can be resolved
-        with sufficient confidence. (Sufficient confidence depends on
-        bound_type.)
+        with sufficient confidence. If insufficient common ranks between self
+        and other are available to resolve any common ancestor, returns None.
 
         See Also
         --------
@@ -946,19 +1041,52 @@ class HereditaryStratigraphicColumn:
             corresponding docstring for explanation of parameters.
         """
 
+        if self.CalcRankOfEarliestDetectableMrcaWith(
+            other,
+            confidence_level=confidence_level,
+        ) is None:
+            return None
+
         bounds = self.CalcRankOfMrcaBoundsWith(
             other,
             confidence_level=confidence_level,
-            bound_type=bound_type,
         )
         return 0 if bounds is None else abs(operator.sub(*bounds)) - 1
+
+    def CalcRankOfEarliestDetectableMrcaWith(
+        self: 'HereditaryStratigraphicColumn',
+        other: 'HereditaryStratigraphicColumn',
+        confidence_level: float=0.95,
+    ) -> typing.Optional[int]:
+        """What is the earliest possible rank a MRCA between self and other
+        could be reliably detected at?
+
+        Even if a true MRCA of self and other exists, if it occured earlier
+        than the rank calculated here it could not be reliably detected with
+        sufficient confidence after accounting for the possibility of spurious
+        differentia collisions. (Although subsequent spurious differentia
+        collisions after the true MRCA of self and other could lead to MRCA
+        detection at such a rank.)
+
+        Returns None if insufficient common ranks exist between self and other
+        to ever conclude at the given confidence level the existance of any
+        common ancestry between self and other (even if all strata at common
+        ranks had equivalent differentiae).
+        """
+
+        num_required_common_ranks = self.\
+            CalcMinImplausibleSpuriousConsecutiveDifferentiaCollisions(
+                significance_level=1 - confidence_level,
+            )
+        # zero-indexed
+        return self.GetNthCommonRankWith(other, num_required_common_ranks - 1)
 
     def CalcDefinitiveMinRanksSinceLastRetainedCommonalityWith(
         self: 'HereditaryStratigraphicColumn',
         other: 'HereditaryStratigraphicColumn',
     ) -> typing.Optional[int]:
         """At least, how many depositions have elapsed along this column's line
-        of descent since the las matching strata at the same rank between self
+        of descent since the last matching strata at the same rank between self
         and other?
 
         Returns None if no common ancestor between self and other can be
@@ -1082,7 +1210,6 @@ class HereditaryStratigraphicColumn:
         self: 'HereditaryStratigraphicColumn',
         other: 'HereditaryStratigraphicColumn',
         confidence_level: float=0.95,
-        bound_type: str='symmetric',
     ) -> typing.Optional[typing.Tuple[int, int]]:
         """Calculate bounds on estimate for the number of depositions elapsed
         along this column's line of descent since the most recent common
@@ -1093,12 +1220,6 @@ class HereditaryStratigraphicColumn:
         confidence_level : float, optional
             With what probability should the true rank of the MRCA fall
             within the calculated bounds? Default 0.95.
-        bound_type : {'symmetric', 'hard_lower_bound'}
-            If 'symmetric', then the true number of ranks since the MRCA may
-            lie on either side of the calculated bounds (i.e., may be less than
-            the lower bound or greater than the upper bound). If
-            'hard_lower_bound', then the true number of ranks since the MRCA is
-            guaranteed to be strictly less than or  Default 'symmetric'.
 
         Returns
         -------
@@ -1112,29 +1233,65 @@ class HereditaryStratigraphicColumn:
         --------
         CalcRanksSinceMrcaUncertaintyWith :
             Wrapper to report uncertainty of calculated bounds.
+        CalcRanksSinceEarliestDetectableMrcaWith :
+            Could any MRCA be detected between self and other? How many ranks
+            have elapsed since the earliest MRCA that could be reliably
+            detected?
+
+        Notes
+        -----
+        The true number of ranks since the MRCA is guaranteed to never fall below the bounds but may fall above.
+
+        An alternate approach could be to construct the bounds such that the
+        true number of ranks since the MRCA will fall above or below the bounds
+        with equal probability. This would involve setting the confidence level
+        for calculating the first disparity with other to significance_level/2
+        and the confidence level for calculaing the last comonality with other
+        to 1 - significance_level/2. This means the confidence level applied to
+        calculating the first disparity with other would always be <= 0.5.
+        However, shifting the calculated first disparity with other above
+        the definitive min first retained disparity requires confidence level
+        >= 0.5. So, in practice such a symmetric approach would only result in
+        the upper bound being shifted upward. For this reason, it is no longer
+        provided as an option.
+
+        In the absence of evidence to the contrary (i.e., more common
+        strata than spurious differentia collisions alone could plausibly
+        cause), this method assumes no common ancestry between self and other,
+        returning None. This means that if few enough common ranks are shared
+        between self and other (and the differentia bit with is small enough),
+        it may not be possible to detect any common ancestry after accounting
+        for the possibility of spurious differentia collisions (even if common
+        ancestry did exist). So, calls to this method would always return None.
+        Likewise, MRCAs at very early ranks may not be able to be reliably
+        detected due to insufficient evidence. This can lead to cases where
+        columns with true common ancestry have MRCA bounds estimated as None at
+        much higher than the expected failure rate at the given confidence
+        level. Note that with sufficient differentia bit width (i.e., so that
+        even one collision is implausible at the given confidence level) this
+        issue does not occur. Use CalcRanksSinceEarliestDetectableMrcaWith to
+        determine the earliest rank at which an MRCA could be reliably detected
+        between self and other.
         """
 
         assert 0.0 <= confidence_level <= 1.0
 
-        significance_level = 1 - confidence_level
+        if self.CalcRankOfEarliestDetectableMrcaWith(
+            other,
+            confidence_level=confidence_level,
+        ) is None:
+            warnings.warn(
+                'Insufficient common ranks between columns to detect common ' 'ancestry at given confidence level.'
+            )
+
         if self.HasAnyCommonAncestorWith(
             other,
-            confidence_level={
-                'symmetric' : 1.0 - significance_level / 2.0,
-                'hard_lower_bound' : 1.0 - significance_level,
-            }[bound_type],
+            confidence_level=confidence_level,
         ):
-            since_first_disparity = {
-                'symmetric' : lambda: \
-                    self.CalcRanksSinceFirstRetainedDisparityWith(
-                        other,
-                        confidence_level=1.0 - significance_level / 2.0,
-                    ),
-                'hard_lower_bound' : lambda: \
-                    self.CalcDefinitiveMinRanksSinceFirstRetainedDisparityWith(
-                        other
-                    ),
-            }[bound_type]()
+            since_first_disparity \
+                = self.CalcDefinitiveMinRanksSinceFirstRetainedDisparityWith(
+                    other,
+                )
 
             lb_exclusive = opyt.or_value(since_first_disparity, -1)
             lb_inclusive = lb_exclusive + 1
@@ -1142,10 +1299,7 @@ class HereditaryStratigraphicColumn:
             since_last_commonality \
                 = self.CalcRanksSinceLastRetainedCommonalityWith(
                     other,
-                    confidence_level={
-                        'symmetric' : 1.0 - significance_level / 2.0,
-                        'hard_lower_bound' : 1.0 - significance_level,
-                    }[bound_type],
+                    confidence_level=confidence_level,
                 )
             assert since_last_commonality is not None
             ub_inclusive = since_last_commonality
@@ -1159,15 +1313,14 @@ class HereditaryStratigraphicColumn:
         self: 'HereditaryStratigraphicColumn',
         other: 'HereditaryStratigraphicColumn',
         confidence_level: float=0.95,
-        bound_type: str='symmetric',
-    ) -> int:
+    ) -> typing.Optional[int]:
         """Calculate uncertainty of estimate for the number of depositions
         elapsed along this column's line of descent since the most common recent
         ancestor with other.
 
         Returns 0 if no common ancestor between self and other can be resolved
-        with sufficient confidence. (Sufficient confidence depends on
-        bound_type.)
+        with sufficient confidence. If insufficient common ranks between self
+        and other are available to resolve any common ancestor, returns None.
 
         See Also
         --------
@@ -1178,12 +1331,46 @@ class HereditaryStratigraphicColumn:
 
         assert 0.0 <= confidence_level <= 1.0
 
+        if self.CalcRankOfEarliestDetectableMrcaWith(
+            other,
+            confidence_level=confidence_level,
+        ) is None:
+            return None
+
         bounds = self.CalcRanksSinceMrcaBoundsWith(
             other,
             confidence_level=confidence_level,
-            bound_type=bound_type,
         )
         return 0 if bounds is None else abs(operator.sub(*bounds)) - 1
+
+    def CalcRanksSinceEarliestDetectableMrcaWith(
+        self: 'HereditaryStratigraphicColumn',
+        other: 'HereditaryStratigraphicColumn',
+        confidence_level: float=0.95,
+    ) -> typing.Optional[int]:
+        """How many depositions have elapsed since the earliest possible rank a
+        MRCA between self and other could be reliably detected at?
+
+        Even if a true MRCA of self and other exists, if it occured earlier
+        than the rank calculated here it could not be reliably detected with
+        sufficient confidence after accounting for the possibility of spurious
+        differentia collisions. (Although subsequent spurious differentia
+        collisions after the true MRCA of self and other could lead to MRCA
+        detection at such a rank.)
+
+        Returns None if insufficient common ranks exist between self and other
+        to ever conclude at the given confidence level the existance of any
+        common ancestry between self and other (even if all strata at common
+        ranks had equivalent differentiae).
+        """
+
+        return opyt.apply_if(
+            self.CalcRankOfEarliestDetectableMrcaWith(
+                other,
+                confidence_level=confidence_level,
+            ),
+            lambda rank: self.GetNumStrataDeposited() - 1 - rank,
+        )
 
     def GetLastCommonStratumWith(
         self: 'HereditaryStratigraphicColumn',
@@ -1235,18 +1422,18 @@ class HereditaryStratigraphicColumn:
         """
 
         first_disparity \
-            = self.CalcDefinitiveMaxRankOfFirstRetainedDisparityWith(
-                other,
-                confidence_level=confidence_level,
-            )
+            = self.CalcDefinitiveMaxRankOfFirstRetainedDisparityWith(other)
         return False if first_disparity is None else first_disparity == 0
 
     def HasAnyCommonAncestorWith(
         self: 'HereditaryStratigraphicColumn',
         other: 'HereditaryStratigraphicColumn',
         confidence_level: float=0.95,
-    ) -> bool:
+    ) -> typing.Optional[bool]:
         """Does self share any common ancestor with other?
+
+        If insufficient common ranks between self and other are available to
+        resolve any common ancestor, returns None.
 
         Note that stratum rention policies are strictly required to permanently
         retain the most ancient stratum.
@@ -1264,6 +1451,12 @@ class HereditaryStratigraphicColumn:
             Can we definitively conclude that self and other share no common
             ancestor?
         """
+
+        if self.CalcRankOfEarliestDetectableMrcaWith(
+            other,
+            confidence_level=confidence_level,
+        ) is None:
+            return None
 
         first_disparity = self.CalcRankOfFirstRetainedDisparityWith(
             other,
