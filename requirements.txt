@@ -34,7 +34,9 @@ babel==2.9.1
 backcall==0.2.0
     # via ipython
 beautifulsoup4==4.10.0
-    # via bs4
+    # via
+    #   -r requirements.in
+    #   bs4
 bleach==4.1.0
     # via nbconvert
 boto3==1.14.44
@@ -109,7 +111,7 @@ gmpy==1.17
     # via
     #   -r requirements.in
     #   hstrat
-hstrat==0.1.1
+hstrat==0.2.0
     # via -r requirements.in
 hurry.filesize==0.9
     # via nbmetalog
