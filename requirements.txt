@@ -107,7 +107,6 @@ decorator==5.1.1
     #   gcsfs
     #   ipython
     #   networkx
-    #   traitlets
 defusedxml==0.7.1
     # via nbconvert
 deprecation==2.1.0
@@ -208,9 +207,7 @@ ipython==7.16.1
     #   endomill
     #   ipykernel
 ipython-genutils==0.2.0
-    # via
-    #   nbformat
-    #   traitlets
+    # via nbformat
 isodate==0.6.1
     # via msrest
 iterdub==0.2.0
@@ -476,7 +473,6 @@ six==1.16.0
     #   osfclient
     #   patsy
     #   python-dateutil
-    #   traitlets
     #   tweepy
 smmap==5.0.0
     # via gitdb
@@ -535,7 +531,7 @@ tqdm==4.50.2
     #   -r requirements.in
     #   osfclient
     #   papermill
-traitlets==4.3.3
+traitlets==5.1.1
     # via
     #   -r requirements.in
     #   ipykernel
