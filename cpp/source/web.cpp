@@ -5,7 +5,6 @@
 
 #include "hstrat/config/Config.hpp"
 #include "hstrat/config/setup_config_web.hpp"
-#include "hstrat/example.hpp"
 
 emp::web::Document doc("emp_base");
 
@@ -22,5 +21,5 @@ int main() {
 
   std::cout << "Hello, console!" << '\n';
 
-  return hstrat::example();
+  return 0;
 }
