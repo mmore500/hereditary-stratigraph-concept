@@ -11,11 +11,6 @@ RUN \
   echo "installed npm dependencies"
 
 RUN \
-  python3 -m pip install -r /opt/hereditary-stratigraph-concept/requirements.txt \
-    && \
-  echo "installed python dependencies"
-
-RUN \
   apt-get update -q --allow-unauthenticated \
     && \
   apt-get install -qy --no-install-recommends \
@@ -23,6 +18,11 @@ RUN \
     libgmp3-dev \
     && \
   rm -rf /var/lib/apt/lists/*
+
+RUN \
+  python3 -m pip install -r /opt/hereditary-stratigraph-concept/requirements.txt \
+    && \
+  echo "installed python dependencies"
 
 USER user
 
