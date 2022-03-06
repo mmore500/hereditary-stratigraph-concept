@@ -1,3 +1,87 @@
+var selected = new Set();
+var pairwise_data = new Map();
+var age_scale;
+var root;
+var color_scale = d3.scaleOrdinal(d3.schemeCategory10);
+var strokeWidth = 5;
+var axis;
+var axis_g;
+var scale_range;
+
+const svg = d3.select("svg");
+
+function update_tree() {
+
+    root.each(d => {
+        d.y = age_scale(d.data.origin_time);
+      });
+
+      svg.selectAll(".phylo_path")
+          .attr("d", d3.linkHorizontal()
+              .x(d => d.y)
+              .y(d => d.x));
+  
+    svg.selectAll("a")
+        .attr("transform", d => `translate(${d.y},${d.x})`);
+  
+    svg.selectAll("rect")
+        .attr("width", function(d) {
+            var end = d.data.destruction_time;
+            if (end == 5000) {
+                extant[d.id] = d;
+            }
+            return age_scale(end) - d.y;
+        })
+        .attr("y", function(d){return (-.5 * strokeWidth) + d.data.offset*strokeWidth;});
+    
+    new_ticks = [age_scale.invert(scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.25 + scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.5 + scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.75 + scale_range[0]), age_scale.invert(scale_range[1])];
+    axis.tickValues(new_ticks)
+    axis_g.call(axis);
+}
+
+function update_age_scale(exponent) {
+    age_scale.exponent(exponent);
+    update_tree();
+
+}
+
+$("#exponent_slider").on("input change", function() {
+    var e = $('#exponent_slider').val();
+    update_age_scale(e); 
+});
+
+function handle_click(event, d) {
+    var sel = d3.select(this);
+    if (selected.has(d.id)) {
+        sel.style("fill", "black")
+        selected.delete(d.id);
+        return;
+    }
+
+    if (selected.size >= 2) {
+        d3.selectAll("circle").style("fill", "black");
+        selected.clear();
+    }
+
+    sel.style("fill", "red")
+    selected.add(d.id);
+
+    if (selected.size == 2) {
+        var iter = selected.keys();
+        var k1 = iter.next().value;
+        var k2 = iter.next().value;
+        var mrca_info = pairwise_data.get(k1).get(k2);
+        console.log(mrca_info);
+        svg.selectAll("rect").data(mrca_info).append("rect")
+           .attr("width", function(d) {return age_scale(d.upper_bound) - age_scale(d.lower_bound) + 1})
+           .attr("x", function(d) {return age_scale(mrca_info.upper_bound);})
+           .attr("y", 0)
+           .attr("height", 2000);
+    }
+}
+
+
+var extant = {};
 
 function CalcOffsets(node, in_use={}) {
     var to_remove = [];
@@ -59,15 +143,25 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     strokeLinecap, // stroke line cap for links
     halo = "#fff", // color of label halo
     haloWidth = 3, // padding around the labels
+    axis_space = 20
   } = {}) {
+<<<<<<< HEAD
+  
+    age_scale = d3.scalePow().exponent(10).domain([0,5000]).range([padding, width - 2*padding]);
+    scale_range = age_scale.range();
+    axis = d3.axisTop(age_scale)
+            //  .ticks(3);       
+             .tickValues([0, 4000, 4500, 4750, 5000]);
+=======
 
     var age_scale = d3.scalePow().exponent(10).domain([0,5000]).range([padding, width - 2*padding]);
     var color_scale = d3.scaleOrdinal(d3.schemeCategory10);
+>>>>>>> 2bdda846add1ceb903670e0189dfbfcbaa5d62c0
     // If id and parentId options are specified, or the path option, use d3.stratify
     // to convert tabular data to a hierarchy; otherwise we assume that the data is
     // specified as an object {children} with nested objects (a.k.a. the “flare.json”
     // format), and use d3.hierarchy.
-    const root = path != null ? d3.stratify().path(path)(data)
+    root = path != null ? d3.stratify().path(path)(data)
         : id != null || parentId != null ? d3.stratify().id(id).parentId(parentId)(data)
         : d3.hierarchy(data, children);
 
@@ -79,9 +173,11 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     if (sort != null) root.sort(sort);
 
     // Compute the layout.
-    const dx = 10;
+    const dx = 10 + axis_space;
     const dy = width / (root.height + padding);
-    tree().nodeSize([dx, dy])(root);
+    // tree().nodeSize([dx, dy])(root);
+    tree().size([height - 2*padding - axis_space, 1])(root);
+    // tree()(root);
 
     // Center the tree.
     let x0 = Infinity;
@@ -96,10 +192,16 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     CalcOffsets(root);
 
     // Compute the default height.
+<<<<<<< HEAD
+    if (height === undefined) height = x1 - x0 + dx * 2 + axis_space;
+  
+    svg.attr("viewBox", [-dy * padding / 2, x0 - dx, width, height])
+=======
     if (height === undefined) height = x1 - x0 + dx * 2;
 
     const svg = d3.select("svg")
         .attr("viewBox", [-dy * padding / 2, x0 - dx, width, height])
+>>>>>>> 2bdda846add1ceb903670e0189dfbfcbaa5d62c0
         .attr("width", width)
         .attr("height", height)
         // .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
@@ -118,8 +220,14 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
         .join("path")
           .attr("d", d3.linkHorizontal()
               .x(d => d.y)
+<<<<<<< HEAD
+              .y(d => d.x))
+          .classed("phylo_path", true);
+  
+=======
               .y(d => d.x));
 
+>>>>>>> 2bdda846add1ceb903670e0189dfbfcbaa5d62c0
     const node = svg.append("g")
       .selectAll("a")
       .data(root.descendants())
@@ -129,7 +237,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
         .attr("transform", d => `translate(${d.y},${d.x})`);
 
     node.append("rect")
-        .attr("height", 1)
+        .attr("height", strokeWidth)
         // .attr("height", function(d) {
         //     var end = d.data.destruction_time;
         //     if (isNaN(end)) {
@@ -139,20 +247,22 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
         // })
         .attr("width", function(d) {
             var end = d.data.destruction_time;
-            // if (isNaN(end)) {
-            //     end = 5000;
-            // }
+            if (end == 5000) {
+                extant[d.id] = d;
+            }
             return age_scale(end) - d.y;
         })
-        .style("fill-opacity", 0)
-        .style("stroke-width", 1)
+        .style("fill-opacity", 1)
+        .style("stroke-width", .1)
+        .style("fill", function(d){return color_scale(d.id);})
         .style("stroke", function(d){return color_scale(d.id);})
         // .attr("x", function(d) {return 1;});
-        .attr("y", function(d){return d.data.offset*2;});
+        .attr("y", function(d){return (-.5 * strokeWidth) + d.data.offset*strokeWidth;});
 
     node.append("circle")
         .attr("fill", fill)
-        .attr("r", function(d){return d.data.destruction_time == 5000 ? 2 : 0;});
+        .attr("r", function(d){return d.data.destruction_time == 5000 ? 2 : 0;})
+        .on("click", handle_click);
 
 
     if (title != null) node.append("title")
@@ -167,36 +277,93 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
         .attr("fill", "none")
         .attr("stroke", halo)
         .attr("stroke-width", haloWidth);
+<<<<<<< HEAD
+    // console.log(extant);
+=======
+
+    return svg.node();
+  }
+>>>>>>> 2bdda846add1ceb903670e0189dfbfcbaa5d62c0
+
+    axis_g = svg.append("g")
+       .attr("transform", "translate(0,"+ (x0 - dx + axis_space) + ")")
+       .call(axis);
+
+    svg.append("text")
+        .attr("transform", "translate(" + width/2 + ","+ (x0 - dx + axis_space) + ")")
+        .attr("dy", "-2em")
+        .style("text-anchor", "middle")
+        .style("font-size", 18)
+        .text("Time");
 
     return svg.node();
   }
 
-
-// d3.csv("example.csv", function(data){
-d3.csv("nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv",
-  function(d) {
-      return {
-          id: d.id,
-          parentId: d.ancestor_list == "[NONE]" ? null : JSON.parse(d.ancestor_list)[0],
-          origin_time: +d.origin_time,
-          destruction_time: isNaN(+d.destruction_time) ? 5000 : +d.destruction_time
-      };
-  }
-).then(
-    function(data) {
-        var chart = Tree(data, {
-            // id: function(d){return d.id},
-            // parentId: function(d){
-            //     if (d.ancestor_list == "[NONE]") {
-            //         return null;
-            //     }
-            //     return JSON.parse(d.ancestor_list)[0];
-            // },
-            width: 2000,
-            height: 2000,
-            padding: 10,
-            fill: "black"
-        });
-
+d3.csv("../data/osfstorage/phylogenetic-inference/simulated-pairwise-mrca-estimates/a=pairwise_mrca_estimates+source=osf-nk-randomselection-seed7-pop100-mut-01-snapshot-5000-csv", function(row) {
+    return {
+        from: row["Taxon Compared From"],
+        to: row["Taxon Compared To"],
+        lower_bound: +row["Generation Of MRCA Lower Bound (inclusive)"],
+        upper_bound: +row["Generation Of MRCA Upper Bound (exclusive)"],
+        confidence: +row["MRCA Bound Confidence"]
+    };
+}).then(
+    function(data){
+        console.log("loaded");
+        for (var row of data) {
+            if (!pairwise_data.has(row.from)) {
+                // console.log(row);
+                pairwise_data.set(row.from, new Map([[row.to, [row]]]));
+            } else {
+                if (!pairwise_data.get(row.from).has(row.to)) {
+                    pairwise_data.get(row.from).set(row.to, [row]);
+                } else {
+                    pairwise_data.get(row.from).get(row.to).push(row);
+                }
+            }
+            if (!pairwise_data.has(row.to)) {
+                // console.log(row);
+                pairwise_data.set(row.to, new Map([[row.from, [row]]]));
+            } else {
+                if (!pairwise_data.get(row.to).has(row.from)) {
+                    pairwise_data.get(row.to).set(row.from, [row]);
+                } else {
+                    pairwise_data.get(row.to).get(row.from).push(row);
+                }
+            }
+        }
     }
-);
+).then( function(orig_data) {
+    // d3.csv("example.csv", function(data){
+    d3.csv("../data/osfstorage/phylogenetic-inference/template-phylogenies/nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv",
+    function(d) {
+        return {
+            id: d.id,
+            parentId: d.ancestor_list == "[NONE]" ? null : JSON.parse(d.ancestor_list)[0],
+            origin_time: +d.origin_time,
+            destruction_time: isNaN(+d.destruction_time) ? 5000 : +d.destruction_time
+        };
+    }
+    ).then(
+        function(data) {
+            // console.log(pairwise_data);
+            var chart = Tree(data, {
+                // id: function(d){return d.id},
+                // parentId: function(d){
+                //     if (d.ancestor_list == "[NONE]") {
+                //         return null;
+                //     }
+                //     return JSON.parse(d.ancestor_list)[0];
+                // },
+                width: 1500,
+                height: 800,
+                padding: 10,
+                fill: "black",
+                axis_space: 40,
+                strokeWidth: strokeWidth
+            });
+
+        }
+    );
+});
+
