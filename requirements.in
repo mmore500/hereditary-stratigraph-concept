@@ -43,6 +43,7 @@ opytional==0.1.0
 hstrat==0.2.0
 beautifulsoup4==4.10.0
 endomill==0.1.2
+phylotrackpy==0.1.1
 
 # docs
 sphinx==3.1.2
