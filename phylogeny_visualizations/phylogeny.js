@@ -7,6 +7,7 @@ var strokeWidth = 5;
 var axis;
 var axis_g;
 var scale_range;
+var estimate = "actual_bits=1024+actual_strata=16+bits_error=0+differentia=64+policy=RecencyProportionalResolution+resolution=1+target_bits=1024";
 
 const svg = d3.select("svg");
 
@@ -51,6 +52,7 @@ $("#exponent_slider").on("input change", function() {
 });
 
 function handle_click(event, d) {
+    console.log(d);
     var sel = d3.select(this);
     if (selected.has(d.id)) {
         sel.style("fill", "black")
@@ -71,12 +73,17 @@ function handle_click(event, d) {
         var k1 = iter.next().value;
         var k2 = iter.next().value;
         var mrca_info = pairwise_data.get(k1).get(k2);
-        console.log(mrca_info);
-        svg.selectAll("rect").data(mrca_info).append("rect")
+        console.log(mrca_info.get(estimate));
+        svg.selectAll(".conf_int")
+           .data([mrca_info.get(estimate)])
+           .join("rect")
+           .classed("conf_int", true)
            .attr("width", function(d) {return age_scale(d.upper_bound) - age_scale(d.lower_bound) + 1})
-           .attr("x", function(d) {return age_scale(mrca_info.upper_bound);})
+           .attr("x", function(d) {return age_scale(d.lower_bound);})
            .attr("y", 0)
-           .attr("height", 2000);
+           .attr("height", 2000)
+           .style("fill", "yellow")
+           .style("fill-opacity", .2);
     }
 }
 
@@ -243,7 +250,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
 
     node.append("circle")
         .attr("fill", fill)
-        .attr("r", function(d){return d.data.destruction_time == 5000 ? 2 : 0;})
+        .attr("r", function(d){return d.data.destruction_time == 5000 ? 5 : 2;})
         .on("click", handle_click);
 
 
@@ -275,36 +282,37 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     return svg.node();
   }
 
-d3.csv("../data/osfstorage/phylogenetic-inference/simulated-pairwise-mrca-estimates/a=pairwise_mrca_estimates+source=osf-nk-randomselection-seed7-pop100-mut-01-snapshot-5000-csv", function(row) {
+d3.csv("../binder/phylogenetic-inference/a=pairwise_mrca_estimates+source=nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv", function(row) {
     return {
         from: row["Taxon Compared From"],
         to: row["Taxon Compared To"],
         lower_bound: +row["Generation Of MRCA Lower Bound (inclusive)"],
         upper_bound: +row["Generation Of MRCA Upper Bound (exclusive)"],
-        confidence: +row["MRCA Bound Confidence"]
+        confidence: +row["MRCA Bound Confidence"],
+        config: row["Column Configuration"]
     };
 }).then(
     function(data){
-        console.log("loaded");
+        // console.log("loaded");
         for (var row of data) {
             if (!pairwise_data.has(row.from)) {
                 // console.log(row);
-                pairwise_data.set(row.from, new Map([[row.to, [row]]]));
+                pairwise_data.set(row.from, new Map([[row.to, new Map([[row.config, row]])]]));
             } else {
                 if (!pairwise_data.get(row.from).has(row.to)) {
-                    pairwise_data.get(row.from).set(row.to, [row]);
+                    pairwise_data.get(row.from).set(row.to, new Map([[row.config, row]]));
                 } else {
-                    pairwise_data.get(row.from).get(row.to).push(row);
+                    pairwise_data.get(row.from).get(row.to).set(row.config, row);
                 }
             }
             if (!pairwise_data.has(row.to)) {
                 // console.log(row);
-                pairwise_data.set(row.to, new Map([[row.from, [row]]]));
+                pairwise_data.set(row.to, new Map([[row.from, new Map([[row.config, row]])]]));
             } else {
                 if (!pairwise_data.get(row.to).has(row.from)) {
-                    pairwise_data.get(row.to).set(row.from, [row]);
+                    pairwise_data.get(row.to).set(row.from, new Map([[row.config, row]]));
                 } else {
-                    pairwise_data.get(row.to).get(row.from).push(row);
+                    pairwise_data.get(row.to).get(row.from).set(row.config, row);
                 }
             }
         }
