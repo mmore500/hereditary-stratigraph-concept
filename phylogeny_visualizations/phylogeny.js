@@ -20,10 +20,10 @@ function update_tree() {
           .attr("d", d3.linkHorizontal()
               .x(d => d.y)
               .y(d => d.x));
-  
+
     svg.selectAll("a")
         .attr("transform", d => `translate(${d.y},${d.x})`);
-  
+
     svg.selectAll("rect")
         .attr("width", function(d) {
             var end = d.data.destruction_time;
@@ -33,7 +33,7 @@ function update_tree() {
             return age_scale(end) - d.y;
         })
         .attr("y", function(d){return (-.5 * strokeWidth) + d.data.offset*strokeWidth;});
-    
+
     new_ticks = [age_scale.invert(scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.25 + scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.5 + scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.75 + scale_range[0]), age_scale.invert(scale_range[1])];
     axis.tickValues(new_ticks)
     axis_g.call(axis);
@@ -47,7 +47,7 @@ function update_age_scale(exponent) {
 
 $("#exponent_slider").on("input change", function() {
     var e = $('#exponent_slider').val();
-    update_age_scale(e); 
+    update_age_scale(e);
 });
 
 function handle_click(event, d) {
@@ -145,11 +145,11 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     haloWidth = 3, // padding around the labels
     axis_space = 20
   } = {}) {
-  
+
     age_scale = d3.scalePow().exponent(10).domain([0,5000]).range([padding, width - 2*padding]);
     scale_range = age_scale.range();
     axis = d3.axisTop(age_scale)
-            //  .ticks(3);       
+            //  .ticks(3);
              .tickValues([0, 4000, 4500, 4750, 5000]);
     // If id and parentId options are specified, or the path option, use d3.stratify
     // to convert tabular data to a hierarchy; otherwise we assume that the data is
@@ -187,7 +187,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
 
     // Compute the default height.
     if (height === undefined) height = x1 - x0 + dx * 2 + axis_space;
-  
+
     svg.attr("viewBox", [-dy * padding / 2, x0 - dx, width, height])
         .attr("width", width)
         .attr("height", height)
@@ -209,7 +209,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
               .x(d => d.y)
               .y(d => d.x))
           .classed("phylo_path", true);
-  
+
     const node = svg.append("g")
       .selectAll("a")
       .data(root.descendants())
@@ -342,4 +342,3 @@ d3.csv("../data/osfstorage/phylogenetic-inference/simulated-pairwise-mrca-estima
         }
     );
 });
-
