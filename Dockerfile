@@ -20,6 +20,7 @@ RUN \
     && \
   apt-get install -qy --no-install-recommends \
     gawk \
+    libgmp3-dev \
     && \
   rm -rf /var/lib/apt/lists/*
 
