@@ -9,13 +9,12 @@ seaborn==0.11.0
 frozendict==1.2
 matplotlib==3.3.2
 iterpop==0.3.4
-python-slugify==4.0.1
+python-slugify==6.1.1
 networkx==2.5
 tweepy==3.10.0
 image-slicer==2.1.1
 tqdm==4.50.2
 boto3==1.14.44
-fsspec==0.8.5
 s3fs==0.5.1
 aiobotocore[boto3, awscli]==1.1.2
 statsmodels==0.12.2
@@ -41,6 +40,10 @@ gmpy==1.17
 interval-search==0.1.2
 iterify==0.1.0
 opytional==0.1.0
+hstrat==0.2.0
+beautifulsoup4==4.10.0
+endomill==0.1.2
+phylotrackpy==0.1.1
 
 # docs
 sphinx==3.1.2

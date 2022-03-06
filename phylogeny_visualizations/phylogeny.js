@@ -141,16 +141,22 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     strokeOpacity = 0.4, // stroke opacity for links
     strokeLinejoin, // stroke line join for links
     strokeLinecap, // stroke line cap for links
-    halo = "#fff", // color of label halo 
+    halo = "#fff", // color of label halo
     haloWidth = 3, // padding around the labels
     axis_space = 20
   } = {}) {
+<<<<<<< HEAD
   
     age_scale = d3.scalePow().exponent(10).domain([0,5000]).range([padding, width - 2*padding]);
     scale_range = age_scale.range();
     axis = d3.axisTop(age_scale)
             //  .ticks(3);       
              .tickValues([0, 4000, 4500, 4750, 5000]);
+=======
+
+    var age_scale = d3.scalePow().exponent(10).domain([0,5000]).range([padding, width - 2*padding]);
+    var color_scale = d3.scaleOrdinal(d3.schemeCategory10);
+>>>>>>> 2bdda846add1ceb903670e0189dfbfcbaa5d62c0
     // If id and parentId options are specified, or the path option, use d3.stratify
     // to convert tabular data to a hierarchy; otherwise we assume that the data is
     // specified as an object {children} with nested objects (a.k.a. the “flare.json”
@@ -158,14 +164,14 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     root = path != null ? d3.stratify().path(path)(data)
         : id != null || parentId != null ? d3.stratify().id(id).parentId(parentId)(data)
         : d3.hierarchy(data, children);
-  
+
     // Compute labels and titles.
     const descendants = root.descendants();
     const L = label == null ? null : descendants.map(d => label(d.data, d));
 
     // Sort the nodes.
     if (sort != null) root.sort(sort);
-  
+
     // Compute the layout.
     const dx = 10 + axis_space;
     const dy = width / (root.height + padding);
@@ -182,19 +188,26 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
       //   console.log(d.y, d.data.origin_time, age_scale(d.data.origin_time));
       d.y = age_scale(d.data.origin_time);
     });
-  
+
     CalcOffsets(root);
 
     // Compute the default height.
+<<<<<<< HEAD
     if (height === undefined) height = x1 - x0 + dx * 2 + axis_space;
   
     svg.attr("viewBox", [-dy * padding / 2, x0 - dx, width, height])
+=======
+    if (height === undefined) height = x1 - x0 + dx * 2;
+
+    const svg = d3.select("svg")
+        .attr("viewBox", [-dy * padding / 2, x0 - dx, width, height])
+>>>>>>> 2bdda846add1ceb903670e0189dfbfcbaa5d62c0
         .attr("width", width)
         .attr("height", height)
         // .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
         .attr("font-family", "sans-serif")
         .attr("font-size", 10);
-  
+
     svg.append("g")
         .attr("fill", "none")
         .attr("stroke", stroke)
@@ -207,9 +220,14 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
         .join("path")
           .attr("d", d3.linkHorizontal()
               .x(d => d.y)
+<<<<<<< HEAD
               .y(d => d.x))
           .classed("phylo_path", true);
   
+=======
+              .y(d => d.x));
+
+>>>>>>> 2bdda846add1ceb903670e0189dfbfcbaa5d62c0
     const node = svg.append("g")
       .selectAll("a")
       .data(root.descendants())
@@ -217,7 +235,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
         .attr("xlink:href", link == null ? null : d => link(d.data, d))
         .attr("target", link == null ? null : linkTarget)
         .attr("transform", d => `translate(${d.y},${d.x})`);
-  
+
     node.append("rect")
         .attr("height", strokeWidth)
         // .attr("height", function(d) {
@@ -249,7 +267,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
 
     if (title != null) node.append("title")
         .text(d => title(d.data, d));
-  
+
     if (L) node.append("text")
         .attr("dy", "0.32em")
         .attr("x", d => d.children ? -6 : 6)
@@ -259,7 +277,13 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
         .attr("fill", "none")
         .attr("stroke", halo)
         .attr("stroke-width", haloWidth);
+<<<<<<< HEAD
     // console.log(extant);
+=======
+
+    return svg.node();
+  }
+>>>>>>> 2bdda846add1ceb903670e0189dfbfcbaa5d62c0
 
     axis_g = svg.append("g")
        .attr("transform", "translate(0,"+ (x0 - dx + axis_space) + ")")
