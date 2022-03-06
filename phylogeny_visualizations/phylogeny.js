@@ -7,7 +7,7 @@ var strokeWidth = 5;
 var axis;
 var axis_g;
 var scale_range;
-var estimate = "actual_bits=1024+actual_strata=16+bits_error=0+differentia=64+policy=RecencyProportionalResolution+resolution=1+target_bits=1024";
+var estimate = "RecencyProportionalResolution164";
 
 const svg = d3.select("svg");
 
@@ -51,21 +51,33 @@ $("#exponent_slider").on("input change", function() {
     update_age_scale(e);
 });
 
+$(".policy_control").on("input change", function() {
+    var pol = $('#retention_policy_select').val();
+    var diff = $('#differentia_select').val();
+    var target = $('#target_bits_select').val();
+    estimate = pol+diff+target;
+});
+
 function handle_click(event, d) {
     console.log(d);
     var sel = d3.select(this);
     if (selected.has(d.id)) {
         sel.style("fill", "black")
+           .attr("r", function(d){return d.data.destruction_time == 5000 ? 3 : 0;});
+
         selected.delete(d.id);
         return;
     }
 
     if (selected.size >= 2) {
-        d3.selectAll("circle").style("fill", "black");
+        d3.selectAll("circle")
+          .style("fill", "black")
+          .attr("r", function(d){return d.data.destruction_time == 5000 ? 3 : 0;});
         selected.clear();
     }
 
     sel.style("fill", "red")
+       .attr("r", 7);
     selected.add(d.id);
 
     if (selected.size == 2) {
@@ -250,7 +262,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
 
     node.append("circle")
         .attr("fill", fill)
-        .attr("r", function(d){return d.data.destruction_time == 5000 ? 5 : 2;})
+        .attr("r", function(d){return d.data.destruction_time == 5000 ? 3 : 0;})
         .on("click", handle_click);
 
 
@@ -289,30 +301,34 @@ d3.csv("../binder/phylogenetic-inference/a=pairwise_mrca_estimates+source=nk_ran
         lower_bound: +row["Generation Of MRCA Lower Bound (inclusive)"],
         upper_bound: +row["Generation Of MRCA Upper Bound (exclusive)"],
         confidence: +row["MRCA Bound Confidence"],
-        config: row["Column Configuration"]
+        config: row["Column Configuration"],
+        differentia: row["Differentia Bit Width"],
+        policy: row["Stratum Retention Policy"],
+        target_bits: row["Stratigraphic Column Target Retained Bits"]
     };
 }).then(
     function(data){
         // console.log("loaded");
         for (var row of data) {
+            var config_key = row.policy + row.differentia + row.target_bits;
             if (!pairwise_data.has(row.from)) {
                 // console.log(row);
-                pairwise_data.set(row.from, new Map([[row.to, new Map([[row.config, row]])]]));
+                pairwise_data.set(row.from, new Map([[row.to, new Map([[config_key, row]])]]));
             } else {
                 if (!pairwise_data.get(row.from).has(row.to)) {
-                    pairwise_data.get(row.from).set(row.to, new Map([[row.config, row]]));
+                    pairwise_data.get(row.from).set(row.to, new Map([[config_key, row]]));
                 } else {
-                    pairwise_data.get(row.from).get(row.to).set(row.config, row);
+                    pairwise_data.get(row.from).get(row.to).set(config_key, row);
                 }
             }
             if (!pairwise_data.has(row.to)) {
                 // console.log(row);
-                pairwise_data.set(row.to, new Map([[row.from, new Map([[row.config, row]])]]));
+                pairwise_data.set(row.to, new Map([[row.from, new Map([[config_key, row]])]]));
             } else {
                 if (!pairwise_data.get(row.to).has(row.from)) {
-                    pairwise_data.get(row.to).set(row.from, new Map([[row.config, row]]));
+                    pairwise_data.get(row.to).set(row.from, new Map([[config_key, row]]));
                 } else {
-                    pairwise_data.get(row.to).get(row.from).set(row.config, row);
+                    pairwise_data.get(row.to).get(row.from).set(config_key, row);
                 }
             }
         }

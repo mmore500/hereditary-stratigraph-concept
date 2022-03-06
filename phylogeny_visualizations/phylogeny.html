@@ -28,7 +28,24 @@
                 <!-- <img src="bootstrap-themes.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy"> -->
                 <label for="exponent_slider" class="form-label">Scale exponent</label>
                 <input type="range" class="form-range" id="exponent_slider" min=".1" max="50" >
-              </div>
+                <select id="retention_policy_select" class="form-select policy_control" aria-label="Retention policy">
+                    <option value="RecencyProportionalResolution">Recency Proportional</option>
+                    <option value="TaperedDepthProportionalResolution">Tapered Depth-Proportional</option>
+                </select>
+                <br>
+                <select id="differentia_select" class="form-select policy_control" aria-label="Differentia Bit Width">
+                    <option value="1">1</option>
+                    <option value="8">8</option>
+                    <option value="64">64</option>
+                </select>
+                <br>
+                <select id="target_bits_select" class="form-select policy_control" aria-label="Stratigraphic Column Target Retained Bits">
+                    <option value="64">64</option>
+                    <option value="512">512</option>
+                    <option value="1024">1024</option>
+                </select>
+
+            </div>
             </div>
         </div>
         <div class="container">
