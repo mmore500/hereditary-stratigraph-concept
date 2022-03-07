@@ -1,0 +1,19 @@
+,Mean Actual Retained Bits,actual_bits,actual_strata,bits_error,differentia,policy,resolution,target_bits,_
+0,63.0,63,63,-1,1,TaperedDepthProportionalResolution,31,64,actual_bits=63+actual_strata=63+bits_error=-1+differentia=1+policy=TaperedDepthProportionalResolution+resolution=31+target_bits=64
+1,56.0,56,7,-8,8,TaperedDepthProportionalResolution,3,64,actual_bits=56+actual_strata=7+bits_error=-8+differentia=8+policy=TaperedDepthProportionalResolution+resolution=3+target_bits=64
+2,192.0,192,3,128,64,TaperedDepthProportionalResolution,1,64,actual_bits=192+actual_strata=3+bits_error=128+differentia=64+policy=TaperedDepthProportionalResolution+resolution=1+target_bits=64
+3,254.24087591240877,255,255,-1,1,TaperedDepthProportionalResolution,127,256,actual_bits=255+actual_strata=255+bits_error=-1+differentia=1+policy=TaperedDepthProportionalResolution+resolution=127+target_bits=256
+4,248.0,248,31,-8,8,TaperedDepthProportionalResolution,15,256,actual_bits=248+actual_strata=31+bits_error=-8+differentia=8+policy=TaperedDepthProportionalResolution+resolution=15+target_bits=256
+5,192.0,192,3,-64,64,TaperedDepthProportionalResolution,1,256,actual_bits=192+actual_strata=3+bits_error=-64+differentia=64+policy=TaperedDepthProportionalResolution+resolution=1+target_bits=256
+6,1024.1751824817518,1024,1024,0,1,TaperedDepthProportionalResolution,512,1024,actual_bits=1024+actual_strata=1024+bits_error=0+differentia=1+policy=TaperedDepthProportionalResolution+resolution=512+target_bits=1024
+7,1015.9416058394161,1016,127,-8,8,TaperedDepthProportionalResolution,63,1024,actual_bits=1016+actual_strata=127+bits_error=-8+differentia=8+policy=TaperedDepthProportionalResolution+resolution=63+target_bits=1024
+8,960.0,960,15,-64,64,TaperedDepthProportionalResolution,7,1024,actual_bits=960+actual_strata=15+bits_error=-64+differentia=64+policy=TaperedDepthProportionalResolution+resolution=7+target_bits=1024
+9,56.36496350364963,57,57,-7,1,RecencyProportionalResolution,5,64,actual_bits=57+actual_strata=57+bits_error=-7+differentia=1+policy=RecencyProportionalResolution+resolution=5+target_bits=64
+10,66.91970802919708,72,9,8,8,RecencyProportionalResolution,0,64,actual_bits=72+actual_strata=9+bits_error=8+differentia=8+policy=RecencyProportionalResolution+resolution=0+target_bits=64
+11,535.3576642335767,576,9,512,64,RecencyProportionalResolution,0,64,actual_bits=576+actual_strata=9+bits_error=512+differentia=64+policy=RecencyProportionalResolution+resolution=0+target_bits=64
+12,254.36496350364965,255,255,-1,1,RecencyProportionalResolution,34,256,actual_bits=255+actual_strata=255+bits_error=-1+differentia=1+policy=RecencyProportionalResolution+resolution=34+target_bits=256
+13,234.91970802919707,240,30,-16,8,RecencyProportionalResolution,2,256,actual_bits=240+actual_strata=30+bits_error=-16+differentia=8+policy=RecencyProportionalResolution+resolution=2+target_bits=256
+14,535.3576642335767,576,9,320,64,RecencyProportionalResolution,0,256,actual_bits=576+actual_strata=9+bits_error=320+differentia=64+policy=RecencyProportionalResolution+resolution=0+target_bits=256
+15,1021.3649635036496,1022,1022,-2,1,RecencyProportionalResolution,215,1024,actual_bits=1022+actual_strata=1022+bits_error=-2+differentia=1+policy=RecencyProportionalResolution+resolution=215+target_bits=1024
+16,1002.9197080291971,1008,126,-16,8,RecencyProportionalResolution,14,1024,actual_bits=1008+actual_strata=126+bits_error=-16+differentia=8+policy=RecencyProportionalResolution+resolution=14+target_bits=1024
+17,535.3576642335767,576,9,-448,64,RecencyProportionalResolution,0,1024,actual_bits=576+actual_strata=9+bits_error=-448+differentia=64+policy=RecencyProportionalResolution+resolution=0+target_bits=1024
