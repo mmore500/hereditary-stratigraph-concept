@@ -8,7 +8,7 @@ pandas==1.1.2
 seaborn==0.11.0
 frozendict==1.2
 matplotlib==3.3.2
-iterpop==0.3.4
+iterpop==0.4.0
 python-slugify==6.1.1
 networkx==2.5
 tweepy==3.10.0
@@ -19,7 +19,7 @@ s3fs==0.5.1
 aiobotocore[boto3, awscli]==1.1.2
 statsmodels==0.12.2
 gitpython==3.1.14
-numpy==1.19.5
+numpy==1.21.5
 scipy==1.5.4
 iterdub==0.2.0
 opencv-python==4.5.1.48
@@ -44,6 +44,7 @@ hstrat==0.2.0
 beautifulsoup4==4.10.0
 endomill==0.1.2
 phylotrackpy==0.1.1
+alifedata-phyloinformatics-convert==0.4.0
 
 # docs
 sphinx==3.1.2
