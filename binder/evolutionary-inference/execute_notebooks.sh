@@ -35,7 +35,7 @@ for notebook in "${script_dir}/"*.ipynb; do
   export NOTEBOOK_PATH="$(realpath "${notebook}")"
   jupyter nbconvert \
     --to notebook --execute --inplace \
-    --ExecutePreprocessor.timeout=600 \
+    --ExecutePreprocessor.timeout=-1 \
     "${notebook}"
 done
 
