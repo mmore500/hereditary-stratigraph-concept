@@ -8,6 +8,9 @@ var axis;
 var axis_g;
 var scale_range;
 var estimate = "RecencyProportionalResolution164";
+var pairwise_file = "a=pairwise_mrca_estimates+source=nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";
+var phylo_file = "nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";
+
 
 const svg = d3.select("svg");
 
@@ -46,16 +49,41 @@ function update_age_scale(exponent) {
 
 }
 
+function update_conf_int() {
+    var iter = selected.keys();
+    var k1 = iter.next().value;
+    var k2 = iter.next().value;
+    var mrca_info = pairwise_data.get(k1).get(k2);
+    console.log(mrca_info.get(estimate));
+    svg.selectAll(".conf_int")
+       .data([mrca_info.get(estimate)])
+       .join("rect")
+       .classed("conf_int", true)
+       .attr("width", function(d) {return age_scale(d.upper_bound) - age_scale(d.lower_bound) + 1})
+       .attr("x", function(d) {return age_scale(d.lower_bound);})
+       .attr("y", 0)
+       .attr("height", 2000)
+       .style("fill", "yellow")
+       .style("fill-opacity", .2);    
+}
+
+function get_curr_policy() {
+    var pol = $('#retention_policy_select').val();
+    var diff = $('#differentia_select').val();
+    var target = $('#target_bits_select').val();
+    estimate = pol+diff+target;
+}
+
+get_curr_policy();
+
 $("#exponent_slider").on("input change", function() {
     var e = $('#exponent_slider').val();
     update_age_scale(e);
 });
 
 $(".policy_control").on("input change", function() {
-    var pol = $('#retention_policy_select').val();
-    var diff = $('#differentia_select').val();
-    var target = $('#target_bits_select').val();
-    estimate = pol+diff+target;
+    get_curr_policy();
+    update_conf_int();
 });
 
 function handle_click(event, d) {
@@ -81,21 +109,7 @@ function handle_click(event, d) {
     selected.add(d.id);
 
     if (selected.size == 2) {
-        var iter = selected.keys();
-        var k1 = iter.next().value;
-        var k2 = iter.next().value;
-        var mrca_info = pairwise_data.get(k1).get(k2);
-        console.log(mrca_info.get(estimate));
-        svg.selectAll(".conf_int")
-           .data([mrca_info.get(estimate)])
-           .join("rect")
-           .classed("conf_int", true)
-           .attr("width", function(d) {return age_scale(d.upper_bound) - age_scale(d.lower_bound) + 1})
-           .attr("x", function(d) {return age_scale(d.lower_bound);})
-           .attr("y", 0)
-           .attr("height", 2000)
-           .style("fill", "yellow")
-           .style("fill-opacity", .2);
+        update_conf_int();
     }
 }
 
@@ -294,7 +308,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     return svg.node();
   }
 
-d3.csv("a=pairwise_mrca_estimates+source=nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv", function(row) {
+d3.csv(pairwise_file, function(row) {
     return {
         from: row["Taxon Compared From"],
         to: row["Taxon Compared To"],
@@ -337,7 +351,7 @@ d3.csv("a=pairwise_mrca_estimates+source=nk_randomselection_seed7_pop100_mut.01_
     // d3.csv("example.csv", function(data){
     // 
     // d3.csv("https://files.osf.io/v1/resources/4sm72/providers/osfstorage/6218eef419ba8b044ae128ba",
-    d3.csv("nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv",
+    d3.csv(phylo_file,
     function(d) {
         return {
             id: d.id,
