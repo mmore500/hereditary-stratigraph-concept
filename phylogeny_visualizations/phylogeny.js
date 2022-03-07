@@ -10,7 +10,8 @@ var scale_range;
 var estimate = "RecencyProportionalResolution164";
 var pairwise_file = "a=pairwise_mrca_estimates+source=nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";
 var phylo_file = "nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";
-
+var max_update = 5000;
+var rect_opacity = 1;
 
 const svg = d3.select("svg");
 
@@ -28,19 +29,19 @@ function update_tree() {
     svg.selectAll("a")
         .attr("transform", d => `translate(${d.y},${d.x})`);
 
-    svg.selectAll("rect")
+    svg.selectAll(".taxon_rect")
         .attr("width", function(d) {
-            var end = d.data.destruction_time;
-            if (end == 5000) {
-                extant[d.id] = d;
-            }
-            return age_scale(end) - d.y;
+            return age_scale(d.data.destruction_time) - d.y;
         })
         .attr("y", function(d){return (-.5 * strokeWidth) + d.data.offset*strokeWidth;});
 
     new_ticks = [age_scale.invert(scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.25 + scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.5 + scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.75 + scale_range[0]), age_scale.invert(scale_range[1])];
     axis.tickValues(new_ticks)
     axis_g.call(axis);
+    if (selected.size == 2) {
+        update_conf_int();
+    }
+
 }
 
 function update_age_scale(exponent) {
@@ -97,12 +98,56 @@ $(".policy_control").on("input change", function() {
     update_conf_int();
 });
 
+function set_rect_opacity() {
+    var checked = document.querySelector(`#show_rects`).checked;
+    if (checked) {
+        rect_opacity = 1;
+    } else {
+        rect_opacity = 0;
+    }
+}
+
+$("#show_rects").on("input change", function() {
+    set_rect_opacity();
+
+    d3.selectAll(".taxon_rect")
+      .style("fill-opacity", rect_opacity)
+      .style("stroke-width", rect_opacity*.1);
+});
+set_rect_opacity();
+
+function set_files() {
+    var choice = $('#example_phylogeny_select').val();
+    if (choice == "random") {
+        pairwise_file = "a=pairwise_mrca_estimates+source=nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";
+        phylo_file = "nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";                
+        max_update = 5000;
+    } else if (choice == "tournament") {
+        pairwise_file = "a=pairwise_mrca_estimates+source=nk_tournamentselection_seed140_pop100_mut.01_snapshot_5000.csv";
+        phylo_file = "nk_tournamentselection_seed140_pop100_mut.01_snapshot_5000.csv";                
+        max_update = 5000;
+    } else if (choice == "lexicase") {
+        pairwise_file = "a=pairwise_mrca_estimates+source=nk_lexicaseselection_seed110_pop165_mut.01_snapshot_500.csv";
+        phylo_file = "nk_lexicaseselection_seed110_pop165_mut.01_snapshot_500.csv";                
+        max_update = 500;
+    } else if (choice == "sharing") {
+        pairwise_file = "a=pairwise_mrca_estimates+source=nk_sharingselection_seed10_pop100_mut.01_snapshot_5000.csv";
+        phylo_file = "nk_sharingselection_seed10_pop100_mut.01_snapshot_5000.csv";                        
+        max_update = 5000;
+    }
+}
+
+$("#example_phylogeny_select").on("input", function() {
+    set_files();
+    load_data();
+});
+
 function handle_click(event, d) {
     console.log(d);
     var sel = d3.select(this);
     if (selected.has(d.id)) {
         sel.style("fill", "black")
-           .attr("r", function(d){return d.data.destruction_time == 5000 ? 3 : 0;});
+           .attr("r", function(d){return d.data.destruction_time == max_update ? 3 : 0;});
 
         selected.delete(d.id);
         return;
@@ -111,7 +156,7 @@ function handle_click(event, d) {
     if (selected.size >= 2) {
         d3.selectAll("circle")
           .style("fill", "black")
-          .attr("r", function(d){return d.data.destruction_time == 5000 ? 3 : 0;});
+          .attr("r", function(d){return d.data.destruction_time == max_update ? 3 : 0;});
         selected.clear();
     }
 
@@ -189,12 +234,14 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     haloWidth = 3, // padding around the labels
     axis_space = 20
   } = {}) {
-
-    age_scale = d3.scalePow().exponent(10).domain([0,5000]).range([padding, width - 2*padding]);
+    extant = {};
+    var e = $('#exponent_slider').val();
+    age_scale = d3.scalePow().exponent(e).domain([0,max_update]).range([padding, width - 2*padding]);
     scale_range = age_scale.range();
+    new_ticks = [age_scale.invert(scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.25 + scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.5 + scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.75 + scale_range[0]), age_scale.invert(scale_range[1])];
     axis = d3.axisTop(age_scale)
             //  .ticks(3);
-             .tickValues([0, 4000, 4500, 4750, 5000]);
+             .tickValues(new_ticks);
     // If id and parentId options are specified, or the path option, use d3.stratify
     // to convert tabular data to a hierarchy; otherwise we assume that the data is
     // specified as an object {children} with nested objects (a.k.a. the “flare.json”
@@ -212,6 +259,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
 
     // Compute the layout.
     const dx = 10 + axis_space;
+    console.log(root.height);
     const dy = width / (root.height + padding);
     // tree().nodeSize([dx, dy])(root);
     tree().size([height - 2*padding - axis_space, 1])(root);
@@ -273,12 +321,13 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
         // })
         .attr("width", function(d) {
             var end = d.data.destruction_time;
-            if (end == 5000) {
-                extant[d.id] = d;
-            }
+            // if (end == max_update) {
+            //     extant[d.id] = d;
+            // }
             return age_scale(end) - d.y;
         })
-        .style("fill-opacity", 1)
+        .classed("taxon_rect", true)
+        .style("fill-opacity", rect_opacity)
         .style("stroke-width", .1)
         .style("fill", function(d){return color_scale(d.id);})
         .style("stroke", function(d){return color_scale(d.id);})
@@ -287,7 +336,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
 
     node.append("circle")
         .attr("fill", fill)
-        .attr("r", function(d){return d.data.destruction_time == 5000 ? 3 : 0;})
+        .attr("r", function(d){return d.data.destruction_time == max_update ? 3 : 0;})
         .on("click", handle_click);
 
 
@@ -319,77 +368,85 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     return svg.node();
   }
 
-d3.csv(pairwise_file, function(row) {
-    return {
-        from: row["Taxon Compared From"],
-        to: row["Taxon Compared To"],
-        lower_bound: +row["Generation Of MRCA Lower Bound (inclusive)"],
-        upper_bound: +row["Generation Of MRCA Upper Bound (exclusive)"],
-        confidence: +row["MRCA Bound Confidence"],
-        config: row["Column Configuration"],
-        differentia: row["Differentia Bit Width"],
-        policy: row["Stratum Retention Policy"],
-        target_bits: row["Stratigraphic Column Target Retained Bits"]
-    };
-}).then(
-    function(data){
-        // console.log("loaded");
-        for (var row of data) {
-            var config_key = row.policy + row.differentia + row.target_bits;
-            if (!pairwise_data.has(row.from)) {
-                // console.log(row);
-                pairwise_data.set(row.from, new Map([[row.to, new Map([[config_key, row]])]]));
-            } else {
-                if (!pairwise_data.get(row.from).has(row.to)) {
-                    pairwise_data.get(row.from).set(row.to, new Map([[config_key, row]]));
-                } else {
-                    pairwise_data.get(row.from).get(row.to).set(config_key, row);
-                }
-            }
-            if (!pairwise_data.has(row.to)) {
-                // console.log(row);
-                pairwise_data.set(row.to, new Map([[row.from, new Map([[config_key, row]])]]));
-            } else {
-                if (!pairwise_data.get(row.to).has(row.from)) {
-                    pairwise_data.get(row.to).set(row.from, new Map([[config_key, row]]));
-                } else {
-                    pairwise_data.get(row.to).get(row.from).set(config_key, row);
-                }
-            }
-        }
-    }
-).then( function(orig_data) {
-    // d3.csv("example.csv", function(data){
-    // 
-    // d3.csv("https://files.osf.io/v1/resources/4sm72/providers/osfstorage/6218eef419ba8b044ae128ba",
-    d3.csv(phylo_file,
-    function(d) {
-        return {
-            id: d.id,
-            parentId: d.ancestor_list == "[NONE]" ? null : JSON.parse(d.ancestor_list)[0],
-            origin_time: +d.origin_time,
-            destruction_time: isNaN(+d.destruction_time) ? 5000 : +d.destruction_time
-        };
-    }
-    ).then(
-        function(data) {
-            // console.log(pairwise_data);
-            var chart = Tree(data, {
-                // id: function(d){return d.id},
-                // parentId: function(d){
-                //     if (d.ancestor_list == "[NONE]") {
-                //         return null;
-                //     }
-                //     return JSON.parse(d.ancestor_list)[0];
-                // },
-                width: 1500,
-                height: 800,
-                padding: 10,
-                fill: "black",
-                axis_space: 40,
-                strokeWidth: strokeWidth
-            });
+function load_data() {
+    svg.selectAll("*").remove();   
 
+    set_files();
+
+    d3.csv(pairwise_file, function(row) {
+        return {
+            from: row["Taxon Compared From"],
+            to: row["Taxon Compared To"],
+            lower_bound: +row["Generation Of MRCA Lower Bound (inclusive)"],
+            upper_bound: +row["Generation Of MRCA Upper Bound (exclusive)"],
+            confidence: +row["MRCA Bound Confidence"],
+            config: row["Column Configuration"],
+            differentia: row["Differentia Bit Width"],
+            policy: row["Stratum Retention Policy"],
+            target_bits: row["Stratigraphic Column Target Retained Bits"]
+        };
+    }).then(
+        function(data){
+            // console.log("loaded");
+            for (var row of data) {
+                var config_key = row.policy + row.differentia + row.target_bits;
+                if (!pairwise_data.has(row.from)) {
+                    // console.log(row);
+                    pairwise_data.set(row.from, new Map([[row.to, new Map([[config_key, row]])]]));
+                } else {
+                    if (!pairwise_data.get(row.from).has(row.to)) {
+                        pairwise_data.get(row.from).set(row.to, new Map([[config_key, row]]));
+                    } else {
+                        pairwise_data.get(row.from).get(row.to).set(config_key, row);
+                    }
+                }
+                if (!pairwise_data.has(row.to)) {
+                    // console.log(row);
+                    pairwise_data.set(row.to, new Map([[row.from, new Map([[config_key, row]])]]));
+                } else {
+                    if (!pairwise_data.get(row.to).has(row.from)) {
+                        pairwise_data.get(row.to).set(row.from, new Map([[config_key, row]]));
+                    } else {
+                        pairwise_data.get(row.to).get(row.from).set(config_key, row);
+                    }
+                }
+            }
         }
-    );
-});
+    ).then( function(orig_data) {
+        // d3.csv("example.csv", function(data){
+        // 
+        // d3.csv("https://files.osf.io/v1/resources/4sm72/providers/osfstorage/6218eef419ba8b044ae128ba",
+        d3.csv(phylo_file,
+        function(d) {
+            return {
+                id: d.id,
+                parentId: d.ancestor_list == "[NONE]" ? null : JSON.parse(d.ancestor_list)[0],
+                origin_time: +d.origin_time,
+                destruction_time: isNaN(+d.destruction_time) ? max_update : +d.destruction_time
+            };
+        }
+        ).then(
+            function(data) {
+                // console.log(pairwise_data);
+                var chart = Tree(data, {
+                    // id: function(d){return d.id},
+                    // parentId: function(d){
+                    //     if (d.ancestor_list == "[NONE]") {
+                    //         return null;
+                    //     }
+                    //     return JSON.parse(d.ancestor_list)[0];
+                    // },
+                    width: 1500,
+                    height: 800,
+                    padding: 10,
+                    fill: "black",
+                    axis_space: 40,
+                    strokeWidth: strokeWidth
+                });
+
+            }
+        );
+    });
+}
+
+load_data();
