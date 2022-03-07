@@ -20,6 +20,8 @@ aiosignal==1.2.0
     # via aiohttp
 alabaster==0.7.12
     # via sphinx
+alifedata-phyloinformatics-convert==0.4.0
+    # via -r requirements.in
 ansiwrap==0.8.4
     # via papermill
 anytree==2.8.0
@@ -51,6 +53,8 @@ beautifulsoup4==4.10.0
     # via
     #   -r requirements.in
     #   bs4
+biopython==1.79
+    # via alifedata-phyloinformatics-convert
 black==22.1.0
     # via papermill
 bleach==4.1.0
@@ -89,6 +93,7 @@ charset-normalizer==2.0.10
     #   requests
 click==8.0.3
     # via
+    #   alifedata-phyloinformatics-convert
     #   black
     #   keyname
     #   papermill
@@ -109,6 +114,8 @@ decorator==5.1.1
     #   networkx
 defusedxml==0.7.1
     # via nbconvert
+dendropy==4.5.2
+    # via alifedata-phyloinformatics-convert
 deprecation==2.1.0
     # via -r requirements.in
 docutils==0.15.2
@@ -143,7 +150,9 @@ gcsfs==2022.2.0
 gitdb==4.0.9
     # via gitpython
 gitpython==3.1.14
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   lyncs-setuptools
 gmpy==1.17
     # via
     #   -r requirements.in
@@ -214,9 +223,10 @@ iterdub==0.2.0
     # via -r requirements.in
 iterify==0.1.0
     # via -r requirements.in
-iterpop==0.3.4
+iterpop==0.4.0
     # via
     #   -r requirements.in
+    #   alifedata-phyloinformatics-convert
     #   hstrat
 j2cli[yaml]==0.3.10
     # via -r requirements.in
@@ -255,6 +265,10 @@ kiwisolver==1.3.2
     # via matplotlib
 lxml==4.7.1
     # via exhale
+lyncs-setuptools==0.3.1
+    # via lyncs-utils
+lyncs-utils==0.3.2
+    # via alifedata-phyloinformatics-convert
 markdown-it-py==0.6.2
     # via
     #   -r requirements.in
@@ -288,6 +302,8 @@ mypy-extensions==0.4.3
     # via black
 myst-parser==0.13.5
     # via -r requirements.in
+nanto==0.1.1
+    # via alifedata-phyloinformatics-convert
 nb-clean==2.0.2
     # via -r requirements.in
 nbclient==0.5.11
@@ -310,9 +326,11 @@ networkx==2.5
     # via -r requirements.in
 nose==1.3.7
     # via -r requirements.in
-numpy==1.19.5
+numpy==1.21.5
     # via
     #   -r requirements.in
+    #   alifedata-phyloinformatics-convert
+    #   biopython
     #   iterdub
     #   matplotlib
     #   opencv-python
@@ -330,6 +348,7 @@ opencv-python==4.5.1.48
 opytional==0.1.0
     # via
     #   -r requirements.in
+    #   alifedata-phyloinformatics-convert
     #   hstrat
 osfclient==0.0.5
     # via -r requirements.in
@@ -337,10 +356,12 @@ packaging==21.3
     # via
     #   bleach
     #   deprecation
+    #   lyncs-setuptools
     #   sphinx
 pandas==1.1.2
     # via
     #   -r requirements.in
+    #   alifedata-phyloinformatics-convert
     #   nbmetalog
     #   seaborn
     #   statsmodels
@@ -478,6 +499,8 @@ smmap==5.0.0
     # via gitdb
 snowballstemmer==2.2.0
     # via sphinx
+sortedcontainers==2.4.0
+    # via alifedata-phyloinformatics-convert
 soupsieve==2.3.1
     # via beautifulsoup4
 sphinx==3.1.2
@@ -573,4 +596,5 @@ zipp==3.7.0
     #   importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
+# pip
 # setuptools
