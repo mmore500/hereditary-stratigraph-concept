@@ -64,7 +64,18 @@ function update_conf_int() {
        .attr("y", 0)
        .attr("height", 2000)
        .style("fill", "yellow")
-       .style("fill-opacity", .2);    
+       .style("fill-opacity", .2);
+
+    svg.selectAll(".conf_int_border")
+       .data([mrca_info.get(estimate)])
+       .join("rect")
+       .classed("conf_int_border", true)
+       .attr("width", 1)
+       .attr("x", function(d) {return age_scale(d.upper_bound);})
+       .attr("y", 0)
+       .attr("height", 2000)
+       .style("fill", "black")
+       .style("fill-opacity", 1);
 }
 
 function get_curr_policy() {
