@@ -20,7 +20,7 @@ aiosignal==1.2.0
     # via aiohttp
 alabaster==0.7.12
     # via sphinx
-alifedata-phyloinformatics-convert==0.5.0
+alifedata-phyloinformatics-convert==0.6.0
     # via -r requirements.in
 ansiwrap==0.8.4
     # via papermill
