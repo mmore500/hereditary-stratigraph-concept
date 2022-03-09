@@ -318,11 +318,11 @@ def draw_biopython_tree_with_origin_time_bounds(
         # lower bound cap      upper bound cap
         # |--------------------|
         #         bar
-        assert hasattr(clade, origin_time_ub), \
-            "Origin time upper bound must be provided as 'origin_time_ub' "
+        assert hasattr(clade, 'origin_time_ub'), \
+            "Origin time upper bound must be provided as 'origin_time_ub' " \
             "attr on all clades."
-        assert hasattr(clade, origin_time_lb), \
-            "Origin time lower bound must be provided as 'origin_time_lb' "
+        assert hasattr(clade, 'origin_time_lb'), \
+            "Origin time lower bound must be provided as 'origin_time_lb' " \
             "attr on all clades."
         bound_width = clade.origin_time_ub - clade.origin_time_lb
 
