@@ -44,7 +44,7 @@ hstrat==0.2.0
 beautifulsoup4==4.10.0
 endomill==0.1.3
 phylotrackpy==0.1.1
-alifedata-phyloinformatics-convert==0.5.0
+alifedata-phyloinformatics-convert==0.6.0
 
 # docs
 sphinx==3.1.2
