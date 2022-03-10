@@ -298,6 +298,8 @@ myst-parser==0.13.5
     # via -r requirements.in
 nanto==0.1.1
     # via alifedata-phyloinformatics-convert
+natsort==8.1.0
+    # via -r requirements.in
 nb-clean==2.0.2
     # via -r requirements.in
 nbclient==0.5.11
