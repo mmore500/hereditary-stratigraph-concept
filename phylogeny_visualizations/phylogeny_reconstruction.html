@@ -29,9 +29,10 @@
                     <label for="example_phylogeny_select" class="input-group-text">Example phylogeny</label>                
                     <select id="example_phylogeny_select" class="form-select" aria-label="Example phylogeny">
                         <option value="random">Random</option>
-                        <!-- <option value="tournament">Tournament selection</option> -->
-                        <!-- <option value="lexicase">Lexicase selection</option> -->
+                        <option value="ecoea">Eco-EA</option>                        
+                        <option value="lexicase">Lexicase selection</option>
                         <option value="sharing">Fitness Sharing</option>
+                        <option value="tournament">Tournament selection</option>                        
                     </select>
                 </div>
                 <!-- <img src="bootstrap-themes.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy"> -->
@@ -87,6 +88,7 @@
       </main>
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.0.0/build/d3-flextree.min.js"></script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

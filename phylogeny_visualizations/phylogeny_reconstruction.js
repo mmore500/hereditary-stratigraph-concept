@@ -16,7 +16,7 @@ var axis_g_phylo;
 var axis_reconst;
 var axis_g_reconst;
 var scale_range;
-var estimate = "RecencyProportionalResolution164";
+var estimate = "differentia=64+policy=RecencyProportionalResolution+target=4096";
 var reconstructed_file = "https://raw.githubusercontent.com/mmore500/hereditary-stratigraph-concept/9b2720368c2310ab6c718da31fee49a873758a06/binder/phylogenetic-inference/a=pairwise_mrca_estimates+source=nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";
 var phylo_file = "nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";
 var max_update = 5000;
@@ -58,6 +58,33 @@ function update_tree() {
     axis_g_reconst.call(axis);
 }
 
+function update_reconst() {
+
+    reconstruct_svg.selectAll("*").remove();
+    
+    var filtered = d3.filter(all_reconstructions, function(d) {return d.treatment == estimate;});
+
+    // console.log(pairwise_data);
+    reconst_root = Tree(filtered, {
+        // id: function(d){return d.id},
+        // parentId: function(d){
+        //     if (d.ancestor_list == "[NONE]") {
+        //         return null;
+        //     }
+        //     return JSON.parse(d.ancestor_list)[0];
+        // },
+        // tree: d3.flextree,
+        width: 1500,
+        height: 1200,
+        padding: 50,
+        fill: "black",
+        axis_space: 40,
+        strokeWidth: strokeWidth,
+        svg_id: "#reconstruct_canvas",
+        sort: function(a, b) {console.log(a.label_name, b.label_name, d3.descending(a.label_name, b.label_name)); return d3.descending(a.label_name, b.label_name);}                
+    });
+}
+
 function update_age_scale(exponent) {
     age_scale.exponent(exponent);
     update_tree();
@@ -68,7 +95,7 @@ function get_curr_policy() {
     var pol = $('#retention_policy_select').val();
     var diff = $('#differentia_select').val();
     var target = $('#target_bits_select').val();
-    estimate = pol+diff+target;
+    estimate = "differentia="+diff+"+policy=" + pol + "+target=" + target;
 }
 
 get_curr_policy();
@@ -80,7 +107,7 @@ $("#exponent_slider").on("input change", function() {
 
 $(".policy_control").on("input change", function() {
     get_curr_policy();
-    update_conf_int();
+    update_reconst();
 });
 
 
@@ -95,13 +122,17 @@ function set_files() {
         phylo_file = "nk_tournamentselection_seed140_pop100_mut.01_snapshot_5000.csv";                
         max_update = 5000;
     } else if (choice == "lexicase") {
-        reconstructed_file = "https://raw.githubusercontent.com/mmore500/hereditary-stratigraph-concept/9b2720368c2310ab6c718da31fee49a873758a06/binder/phylogenetic-inference/a=pairwise_mrca_estimates+source=nk_lexicaseselection_seed110_pop165_mut.01_snapshot_500.csv";
+        reconstructed_file = "https://raw.githubusercontent.com/mmore500/hereditary-stratigraph-concept/9b2720368c2310ab6c718da31fee49a873758a06/binder/phylogenetic-inference/a=reconstructed_phylogenies+source=nk_lexicaseselection_seed110_pop165_mut.01_snapshot_500.csv";
         phylo_file = "nk_lexicaseselection_seed110_pop165_mut.01_snapshot_500.csv";                
         max_update = 500;
     } else if (choice == "sharing") {
         reconstructed_file = "https://raw.githubusercontent.com/mmore500/hereditary-stratigraph-concept/9b2720368c2310ab6c718da31fee49a873758a06/binder/phylogenetic-inference/a=reconstructed_phylogenies+source=nk_sharingselection_seed10_pop100_mut.01_snapshot_5000.csv";
         phylo_file = "nk_sharingselection_seed10_pop100_mut.01_snapshot_5000.csv";                        
         max_update = 5000;
+    } else if (choice == "ecoea") {
+        reconstructed_file = "https://raw.githubusercontent.com/mmore500/hereditary-stratigraph-concept/9b2720368c2310ab6c718da31fee49a873758a06/binder/phylogenetic-inference/a=reconstructed_phylogenies+source=nk_ecoeaselection_seed110_pop100_mut.01_snapshot_3000.csv";
+        phylo_file = "nk_ecoeaselection_seed110_pop100_mut.01_snapshot_3000.csv";                        
+        max_update = 3000;
     }
 }
 
@@ -110,8 +141,6 @@ $("#example_phylogeny_select").on("input", function() {
     load_data();
 });
 
-
-var extant = {};
 
 function AssignSortLabels(curr) {
 
@@ -132,41 +161,46 @@ function AssignSortLabels(curr) {
     }
 }
 
-function CalcOffsets(node, in_use={}) {
-    var to_remove = [];
-    for (var num in in_use) {
-        // console.log(num, in_use, in_use[num], node.data.origin_time);
-        if (in_use[num] <= node.data.origin_time) {
-            to_remove.push(num);
-            // console.log("removing");
-        }
-    }
-
-    for (var num in to_remove) {
-        delete in_use[num];
-    }
-
-    for (var i of [0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5, 6, -6, 7, -7, 8, -8, 9, -9, 10, -10]) {
-        if (!(i in in_use)) {
-            break;
-        }
-    }
-    // console.log(i, in_use);
-    node.data.offset = i;
-    in_use[i] = node.data.destruction_time;
-    if (node.children === undefined || node.children.length > 1) {
-        in_use = {};
-    }
-
-    for (var child in node.children) {
-        let new_in_use = Object.assign({}, in_use);
-        CalcOffsets(node.children[child], new_in_use);
-    }
-    // console.log(node);
-}
-
 function handle_click(e, d) {
     console.log(e, d);
+}
+
+function handle_mouseover(e, data) {
+    var desc = data.target.links();
+    console.log(e);
+    
+    domRect = document.getElementById("phylo_canvas").getBoundingClientRect();;
+
+    var click_x = e.pageX - domRect.left;
+
+    d3.selectAll(".phylo_path")
+      .data(desc, function(d){return d.target.data.unique_id;})
+      .join(
+        enter => enter.append("path"),
+        update => update,
+        exit => exit.style("stroke-opacity", function(d){
+            if (d.target.max_descendant == data.target.max_descendant) {
+                return 1;
+            }
+            for (a of d.target.ancestors()) {
+                if (a.max_descendant == data.target.max_descendant) {
+                    if (click_x > a.y) {
+                        // data.target.unique_id == a.unique_id) {
+                        return .2;
+                    }
+                    return 1;
+                }
+            }
+            
+            return .2;
+        })
+      )      
+
+}
+
+function handle_mouseout(e, data) {
+    d3.selectAll(".phylo_path")
+      .style("stroke-opacity", 1);
 }
 
 // Copyright 2021 Observable, Inc.
@@ -230,7 +264,10 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     const dy = width / (root.height + padding);
     // tree().nodeSize([dx, dy])(root);
     tree().size([height - 2*padding - axis_space, 1])(root);
-    // tree()(root);
+    // tree({
+    //     nodeSize: node => [1, node.data.destruction_time - node.data.origin_time],
+    //     spacing: (nodeA, nodeB) => nodeA.path(nodeB).length,
+    // })(root);
 
     // Center the tree.
     let x0 = Infinity;
@@ -241,8 +278,6 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
       //   console.log(d.y, d.data.origin_time, age_scale(d.data.origin_time));
       d.y = age_scale(d.data.origin_time);
     });
-
-    CalcOffsets(root);
 
     // Compute the default height.
     if (height === undefined) height = x1 - x0 + dx * 2 + axis_space;
@@ -257,7 +292,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     svg.append("g")
         .attr("fill", "none")
         // .attr("stroke", stroke)
-        .attr("stroke-opacity", strokeOpacity)
+        // .attr("stroke-opacity", strokeOpacity)
         .attr("stroke-linecap", strokeLinecap)
         .attr("stroke-linejoin", strokeLinejoin)
         .attr("stroke-width", strokeWidth)
@@ -268,7 +303,9 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
               .x(d => d.y)
               .y(d => d.x))
           .classed("phylo_path", true)
-          .attr("stroke", function(d){return color_scale(+d.target.max_descendant);});
+          .attr("stroke", function(d){return color_scale(+d.target.max_descendant);})
+          .on("mouseover", handle_mouseover)
+          .on("mouseout", handle_mouseout);
 
     const node = svg.append("g")
       .selectAll("a")
@@ -329,6 +366,7 @@ function load_data() {
     d3.csv(reconstructed_file, function(d) {
         return {
             id: d.id,
+            unique_id: "recon_" + d.id,
             label_name: d.name,
             parentId: d.ancestor_list == "[None]" ? null : JSON.parse(d.ancestor_list)[0],
             origin_time: +d.origin_time,
@@ -339,7 +377,7 @@ function load_data() {
 
         function(data) {
             all_reconstructions = data;
-            var filtered = d3.filter(data, function(d) {return d.treatment == "differentia=64+policy=RecencyProportionalResolution+target=4096";});
+            var filtered = d3.filter(all_reconstructions, function(d) {return d.treatment == estimate;});
 
             // console.log(pairwise_data);
             reconst_root = Tree(filtered, {
@@ -350,6 +388,7 @@ function load_data() {
                 //     }
                 //     return JSON.parse(d.ancestor_list)[0];
                 // },
+                // tree: d3.flextree,
                 width: 1500,
                 height: 1200,
                 padding: 50,
@@ -369,6 +408,7 @@ function load_data() {
         function(d) {
             return {
                 id: d.id,
+                unique_id: "phylo_" + d.id,
                 label_name: d.id,
                 parentId: d.ancestor_list == "[NONE]" ? null : JSON.parse(d.ancestor_list)[0],
                 origin_time: +d.origin_time,
@@ -386,6 +426,7 @@ function load_data() {
                     //     }
                     //     return JSON.parse(d.ancestor_list)[0];
                     // },
+                    // tree: d3.flextree,
                     width: 1500,
                     height: 1200,
                     padding: 50,
