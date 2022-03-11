@@ -8,7 +8,7 @@ var axis;
 var axis_g;
 var scale_range;
 var estimate = "RecencyProportionalResolution164";
-var pairwise_file = "a=pairwise_mrca_estimates+source=nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";
+var pairwise_file = "https://raw.githubusercontent.com/mmore500/hereditary-stratigraph-concept/9b2720368c2310ab6c718da31fee49a873758a06/binder/phylogenetic-inference/a=pairwise_mrca_estimates+source=nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";
 var phylo_file = "nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";
 var max_update = 5000;
 var rect_opacity = 1;
@@ -119,19 +119,19 @@ set_rect_opacity();
 function set_files() {
     var choice = $('#example_phylogeny_select').val();
     if (choice == "random") {
-        pairwise_file = "a=pairwise_mrca_estimates+source=nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";
+        pairwise_file = "https://raw.githubusercontent.com/mmore500/hereditary-stratigraph-concept/9b2720368c2310ab6c718da31fee49a873758a06/binder/phylogenetic-inference/a=pairwise_mrca_estimates+source=nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";
         phylo_file = "nk_randomselection_seed7_pop100_mut.01_snapshot_5000.csv";                
         max_update = 5000;
     } else if (choice == "tournament") {
-        pairwise_file = "a=pairwise_mrca_estimates+source=nk_tournamentselection_seed140_pop100_mut.01_snapshot_5000.csv";
+        pairwise_file = "https://raw.githubusercontent.com/mmore500/hereditary-stratigraph-concept/9b2720368c2310ab6c718da31fee49a873758a06/binder/phylogenetic-inference/a=pairwise_mrca_estimates+source=nk_tournamentselection_seed140_pop100_mut.01_snapshot_5000.csv";
         phylo_file = "nk_tournamentselection_seed140_pop100_mut.01_snapshot_5000.csv";                
         max_update = 5000;
     } else if (choice == "lexicase") {
-        pairwise_file = "a=pairwise_mrca_estimates+source=nk_lexicaseselection_seed110_pop165_mut.01_snapshot_500.csv";
+        pairwise_file = "https://raw.githubusercontent.com/mmore500/hereditary-stratigraph-concept/9b2720368c2310ab6c718da31fee49a873758a06/binder/phylogenetic-inference/a=pairwise_mrca_estimates+source=nk_lexicaseselection_seed110_pop165_mut.01_snapshot_500.csv";
         phylo_file = "nk_lexicaseselection_seed110_pop165_mut.01_snapshot_500.csv";                
         max_update = 500;
     } else if (choice == "sharing") {
-        pairwise_file = "a=pairwise_mrca_estimates+source=nk_sharingselection_seed10_pop100_mut.01_snapshot_5000.csv";
+        pairwise_file = "https://raw.githubusercontent.com/mmore500/hereditary-stratigraph-concept/9b2720368c2310ab6c718da31fee49a873758a06/binder/phylogenetic-inference/a=pairwise_mrca_estimates+source=nk_sharingselection_seed10_pop100_mut.01_snapshot_5000.csv";
         phylo_file = "nk_sharingselection_seed10_pop100_mut.01_snapshot_5000.csv";                        
         max_update = 5000;
     }
@@ -387,7 +387,7 @@ function load_data() {
         };
     }).then(
         function(data){
-            // console.log("loaded");
+            console.log("loaded", data);
             for (var row of data) {
                 var config_key = row.policy + row.differentia + row.target_bits;
                 if (!pairwise_data.has(row.from)) {
