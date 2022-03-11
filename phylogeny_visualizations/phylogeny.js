@@ -51,6 +51,11 @@ function update_age_scale(exponent) {
 }
 
 function update_conf_int() {
+    if (selected.size != 2) {
+        svg.selectAll(".conf_int").remove();
+        svg.selectAll(".conf_int_border").remove();
+        return;
+    }
     var iter = selected.keys();
     var k1 = iter.next().value;
     var k2 = iter.next().value;
@@ -60,6 +65,7 @@ function update_conf_int() {
        .data([mrca_info.get(estimate)])
        .join("rect")
        .classed("conf_int", true)
+       .transition()
        .attr("width", function(d) {return age_scale(d.upper_bound) - age_scale(d.lower_bound) + 1})
        .attr("x", function(d) {return age_scale(d.lower_bound);})
        .attr("y", 0)
@@ -71,6 +77,7 @@ function update_conf_int() {
        .data([mrca_info.get(estimate)])
        .join("rect")
        .classed("conf_int_border", true)
+       .transition()
        .attr("width", 1)
        .attr("x", function(d) {return age_scale(d.upper_bound);})
        .attr("y", 0)
@@ -147,7 +154,7 @@ function handle_click(event, d) {
     var sel = d3.select(this);
     if (selected.has(d.id)) {
         sel.style("fill", "black")
-           .attr("r", function(d){return d.data.destruction_time == max_update ? 3 : 0;});
+           .attr("r", function(d){return d.data.destruction_time == max_update  && !d.children ? 3 : 0;});
 
         selected.delete(d.id);
         return;
@@ -156,7 +163,7 @@ function handle_click(event, d) {
     if (selected.size >= 2) {
         d3.selectAll("circle")
           .style("fill", "black")
-          .attr("r", function(d){return d.data.destruction_time == max_update ? 3 : 0;});
+          .attr("r", function(d){return d.data.destruction_time == max_update && !d.children ? 3 : 0;});
         selected.clear();
     }
 
@@ -336,7 +343,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
 
     node.append("circle")
         .attr("fill", fill)
-        .attr("r", function(d){return d.data.destruction_time == max_update ? 3 : 0;})
+        .attr("r", function(d){return d.data.destruction_time == max_update && !d.children ? 3 : 0;})
         .on("click", handle_click);
 
 
