@@ -73,6 +73,9 @@ function update_conf_int() {
        .style("fill", "yellow")
        .style("fill-opacity", .2);
 
+    svg.selectAll(".conf_int")
+       .lower();
+
     svg.selectAll(".conf_int_border")
        .data([mrca_info.get(estimate)])
        .join("rect")
@@ -84,6 +87,10 @@ function update_conf_int() {
        .attr("height", 2000)
        .style("fill", "black")
        .style("fill-opacity", 1);
+
+    svg.selectAll(".conf_int_border")
+       .lower();
+
 }
 
 function get_curr_policy() {
