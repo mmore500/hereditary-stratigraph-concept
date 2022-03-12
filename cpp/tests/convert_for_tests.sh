@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd "$(dirname "$0")"
+
 set -e # exit with error if any of this fails
 rm -rf ../coverage_include
 cp -r ../include ../coverage_include
