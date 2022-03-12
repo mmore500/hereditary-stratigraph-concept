@@ -6,7 +6,7 @@ set -e
 
 # greq -qI tests if file is binary
 # adapted from https://stackoverflow.com/a/29689345
-TARGETS=$(find . -type f ! -path "./cpp/third-party/*" ! -path "./.git/*" ! -path "*/assets/*" ! -path "*.tar.gz" ! -path "*.jpg" ! -path "*.png" ! -path "*Makefile" ! -path "*Maketemplate*" ! -path "./node_modules/*" -exec grep -qI . {} ';' -print)
+TARGETS=$(find . -type f ! -path "./cpp/third-party/*" ! -path "./.git/*" ! -path "*/assets/*" ! -path "*.tar.gz" ! -path "*.jpg" ! -path "*.png" ! -path "*Makefile" ! -path "*Maketemplate*" ! -path "./node_modules/*" ! -path "./tex/submodules/*" -exec grep -qI . {} ';' -print)
 
 for filename in ${TARGETS}
 do

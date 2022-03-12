@@ -4,7 +4,7 @@ set -e
 # enforce use of GNU version of coreutils
 . ./tidy/util/enforce_gnu_utils.sh
 
-TARGETS=$(find . -type f \( -name "*.hpp" -o -name "*.cpp" \) ! -path "./cpp/third-party/*" ! -path "./cpp/node_modules/*")
+TARGETS=$(find . -type f \( -name "*.hpp" -o -name "*.cpp" \) ! -path "./cpp/third-party/*" ! -path "./tex/submodules/*" ! -path "./cpp/node_modules/*")
 
 for filename in ${TARGETS}; do
 
