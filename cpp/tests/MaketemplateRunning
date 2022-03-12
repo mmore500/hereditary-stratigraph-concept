@@ -37,7 +37,7 @@ cranky: $(addprefix test-, $(TARGET_NAMES))
 	rm -rf test*.out
 
 $(TO_ROOT)/cpp/coverage_include:
-	./$(TO_ROOT)/cpp/cpp/tests/convert_for_tests.sh
+	./$(TO_ROOT)/cpp/tests/convert_for_tests.sh
 
 $(TO_ROOT)/cpp/third-party/Catch/single_include/catch2/catch.hpp:
 	git submodule init
