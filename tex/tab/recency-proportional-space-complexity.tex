@@ -1,0 +1,20 @@
+\begin{table}
+
+\begin{tabularx}{\columnwidth}{c | X | X | X | X}%
+  \multirow{2}{*}{\makecell{\bfseries Num\\ \bfseries Generations \\ \bfseries Elapsed}}& \multicolumn{4}{m{0.6\columnwidth}}{\bfseries \centering
+  Guaranteed MRCA-Recency-Proportional Resolution}\\ % specify table head
+  \bfseries  & 1 & 4 & 10 & 100\\\hline\hline  % specify table head
+  \csvreader[
+    filter expr={
+          test{\ifnumgreater{\thecsvinputline}{2}}
+    }
+  ]{submodules/hereditary-stratigraph-concept/binder/retention-policies/a=space-complexity+policy=recency-proportional-resolution+ext=.csv}{}% use head of csv as column names
+{\num[scientific-notation=true,round-precision=2,round-mode=figures]{\csvcolii} & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi\\}% specify your columns here
+\end{tabularx}
+\caption{
+Number of strata retained after one thousand, one million, one billion, and one trillion generations under the recency-proportional resolution stratum retention policy.
+Four different policy parameterizations are shown, the first where MRCA generation can be determined between two extant columns with a guaranteed relative error of 100\%, the second 25\%, the third 10\%, and the fourth 1\%.
+A column's memory footprint will be a constant factor of these retained counts based on the fingerprint differentia width chosen.
+For example, if single byte differentia were used, the column's memory footprint in bits would be $8\times$ the number of strata retained.
+}
+\end{table}
