@@ -346,7 +346,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
         })
         .classed("taxon_rect", true)
         .style("fill-opacity", rect_opacity)
-        .style("stroke-width", .1)
+        .style("stroke-width", .1*rect_opacity)
         .style("fill", function(d){return color_scale(d.id);})
         .style("stroke", function(d){return color_scale(d.id);})
         // .attr("x", function(d) {return 1;});
