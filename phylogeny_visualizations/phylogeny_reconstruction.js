@@ -39,15 +39,15 @@ function update_tree() {
 
 
     d3.selectAll(".phylo_path")
-       .attr("d", d3.linkHorizontal()
-              .x(d => d.y)
-              .y(d => d.x));
+       .attr("d", d3.linkVertical()
+              .x(d => d.x)
+              .y(d => d.y));
 
     phylo_svg.selectAll("a")
-        .attr("transform", d => `translate(${d.y},${d.x})`);
+        .attr("transform", d => `translate(${d.x},${d.y})`);
 
     reconstruct_svg.selectAll("a")
-        .attr("transform", d => `translate(${d.y},${d.x})`);
+        .attr("transform", d => `translate(${d.x},${d.y})`);
 
 
     new_ticks = [age_scale.invert(scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.25 + scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.5 + scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.75 + scale_range[0]), age_scale.invert(scale_range[1])];
@@ -74,8 +74,8 @@ function update_reconst() {
         //     return JSON.parse(d.ancestor_list)[0];
         // },
         // tree: d3.flextree,
-        width: 1500,
-        height: 1200,
+        width: 700,
+        height: 1000,
         padding: 50,
         fill: "black",
         axis_space: 40,
@@ -167,11 +167,14 @@ function handle_click(e, d) {
 
 function handle_mouseover(e, data) {
     var desc = data.target.links();
-    console.log(e);
+    // console.log(e);
     
     domRect = document.getElementById("phylo_canvas").getBoundingClientRect();;
 
-    var click_x = e.pageX - domRect.left;
+    var click_y = e.clientY - domRect.top;
+    // console.log(click_y, e.pageY, e.clientY, domRect.top);
+
+    var ends = new Set();
 
     d3.selectAll(".phylo_path")
       .data(desc, function(d){return d.target.data.unique_id;})
@@ -184,23 +187,51 @@ function handle_mouseover(e, data) {
             }
             for (a of d.target.ancestors()) {
                 if (a.max_descendant == data.target.max_descendant) {
-                    if (click_x > a.y) {
+                    if (click_y > a.y) {
                         // data.target.unique_id == a.unique_id) {
+                        if (d.target.children === undefined) {
+                            ends.add(d.target);
+                        }    
                         return .2;
                     }
                     return 1;
                 }
             }
-            
+            if (d.target.children === undefined) {
+                ends.add(d.target);
+            }            
             return .2;
         })
-      )      
-
+      );
+    // d3.selectAll("circle")
+    //     .style("opacity", function(d){
+    //         if (d.max_descendant == data.target.max_descendant) {
+    //             return 1;
+    //         }
+    //         for (a of d.ancestors()) {
+    //             if (a.max_descendant == data.target.max_descendant) {
+    //                 if (click_y > a.y) {
+    //                     // data.target.unique_id == a.unique_id) {
+    //                     return .2;
+    //                 }
+    //                 return 1;
+    //             }
+    //         }
+            
+    //         return .2;
+    //     });
+    // console.log(ends);
+    d3.selectAll("circle")
+        .data(ends, function(d){return d.data.unique_id;})
+        .style("opacity", .2);
 }
 
 function handle_mouseout(e, data) {
     d3.selectAll(".phylo_path")
       .style("stroke-opacity", 1);
+
+    d3.selectAll("circle")
+      .style("opacity", 1);
 }
 
 // Copyright 2021 Observable, Inc.
@@ -213,7 +244,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     children, // if hierarchical data, given a d in data, returns its children
     tree = d3.tree, // layout algorithm (typically d3.tree or d3.cluster)
     sort = (a, b) => {console.log(a, b); return d3.descending(a.label_name, b.label_name);}, // how to sort nodes prior to layout (e.g., (a, b) => d3.descending(a.height, b.height))
-    label = function(data, d){return data.label_name.includes("Inner") ? "" : data.label_name;}, // given a node d, returns the display label_name
+    label,// = function(data, d){return data.label_name.includes("Inner") ? "" : data.label_name;}, // given a node d, returns the display label_name
     title = function(d){return d.label_name;}, // given a node d, returns its hover text
     link, // given a node d, its link (if any)
     linkTarget = "_blank", // the target attribute for links (if any)
@@ -239,7 +270,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     age_scale = d3.scalePow().exponent(e).domain([0,max_update]).range([padding, width - 2*padding]);
     scale_range = age_scale.range();
     new_ticks = [age_scale.invert(scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.25 + scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.5 + scale_range[0]), age_scale.invert((scale_range[1] - scale_range[0])*.75 + scale_range[0]), age_scale.invert(scale_range[1])];
-    axis = d3.axisTop(age_scale)
+    axis = d3.axisLeft(age_scale)
              .tickValues(new_ticks);
     // If id and parentId options are specified, or the path option, use d3.stratify
     // to convert tabular data to a hierarchy; otherwise we assume that the data is
@@ -263,7 +294,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     console.log(root.height);
     const dy = width / (root.height + padding);
     // tree().nodeSize([dx, dy])(root);
-    tree().size([height - 2*padding - axis_space, 1])(root);
+    tree().size([width - axis_space, height])(root);
     // tree({
     //     nodeSize: node => [1, node.data.destruction_time - node.data.origin_time],
     //     spacing: (nodeA, nodeB) => nodeA.path(nodeB).length,
@@ -275,6 +306,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     root.each(d => {
       if (d.x > x1) x1 = d.x;
       if (d.x < x0) x0 = d.x;
+      d.x += axis_space;
       //   console.log(d.y, d.data.origin_time, age_scale(d.data.origin_time));
       d.y = age_scale(d.data.origin_time);
     });
@@ -282,7 +314,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     // Compute the default height.
     if (height === undefined) height = x1 - x0 + dx * 2 + axis_space;
 
-    svg.attr("viewBox", [0, x0 - dx, width, height])
+    svg.attr("viewBox", [0, 0, width, height])
         .attr("width", width)
         .attr("height", height)
         // .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
@@ -299,9 +331,9 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
       .selectAll("path")
         .data(root.links())
         .join("path")
-          .attr("d", d3.linkHorizontal()
-              .x(d => d.y)
-              .y(d => d.x))
+          .attr("d", d3.linkVertical()
+              .x(d => d.x)
+              .y(d => d.y))
           .classed("phylo_path", true)
           .attr("stroke", function(d){return color_scale(+d.target.max_descendant);})
           .on("mouseover", handle_mouseover)
@@ -313,7 +345,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
       .join("a")
         .attr("xlink:href", link == null ? null : d => link(d.data, d))
         .attr("target", link == null ? null : linkTarget)
-        .attr("transform", d => `translate(${d.y},${d.x})`);
+        .attr("transform", d => `translate(${d.x},${d.y})`);
 
     node.append("circle")
         .attr("fill", function(d){return color_scale(+d.max_descendant);})
@@ -336,11 +368,11 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     // console.log(extant);
 
     axis_g = svg.append("g")
-       .attr("transform", "translate(0,"+ (x0 - dx + axis_space) + ")")
+       .attr("transform", "translate("+ axis_space +","+ 0 + ")")
        .call(axis);
 
     svg.append("text")
-        .attr("transform", "translate(" + width/2 + ","+ (x0 - dx + axis_space) + ")")
+        .attr("transform", "translate(" + height/2 + ","+ 0 + ")")
         .attr("dy", "-2em")
         .style("text-anchor", "middle")
         .style("font-size", 18)
@@ -389,8 +421,8 @@ function load_data() {
                 //     return JSON.parse(d.ancestor_list)[0];
                 // },
                 // tree: d3.flextree,
-                width: 1500,
-                height: 1200,
+                width: 700,
+                height: 1000,
                 padding: 50,
                 fill: "black",
                 axis_space: 40,
@@ -427,8 +459,8 @@ function load_data() {
                     //     return JSON.parse(d.ancestor_list)[0];
                     // },
                     // tree: d3.flextree,
-                    width: 1500,
-                    height: 1200,
+                    width: 700,
+                    height: 1000,
                     padding: 50,
                     fill: "black",
                     axis_space: 40,
