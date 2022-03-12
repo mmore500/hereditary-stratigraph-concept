@@ -17,11 +17,8 @@ cranky-%: %
 clean-%: %
 	$(MAKE) clean -C $<
 
-cov-%: % $(TO_ROOT)/coverage_include
+cov-%: %
 	$(MAKE) coverage -C $<
-
-$(TO_ROOT)/coverage_include:
-	cd $(TO_ROOT)/cpp/tests && ./convert_for_tests.sh
 
 # Test in debug mode without pointer tracker
 test: $(addprefix test-, $(TARGET_NAMES))
