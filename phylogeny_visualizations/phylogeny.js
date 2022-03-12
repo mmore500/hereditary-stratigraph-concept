@@ -148,6 +148,10 @@ function set_files() {
         pairwise_file = "https://raw.githubusercontent.com/mmore500/hereditary-stratigraph-concept/9b2720368c2310ab6c718da31fee49a873758a06/binder/phylogenetic-inference/a=pairwise_mrca_estimates+source=nk_sharingselection_seed10_pop100_mut.01_snapshot_5000.csv";
         phylo_file = "nk_sharingselection_seed10_pop100_mut.01_snapshot_5000.csv";                        
         max_update = 5000;
+    } else if (choice == "ecoea") {
+        pairwise_file = "https://raw.githubusercontent.com/mmore500/hereditary-stratigraph-concept/9b2720368c2310ab6c718da31fee49a873758a06/binder/phylogenetic-inference/a=pairwise_mrca_estimates+source=nk_ecoeaselection_seed110_pop100_mut.01_snapshot_3000.csv";
+        phylo_file = "nk_ecoeaselection_seed110_pop100_mut.01_snapshot_3000.csv";                        
+        max_update = 3000;
     }
 }
 
@@ -294,7 +298,7 @@ function Tree(data, { // data is either tabular (array of objects) or hierarchy 
     // Compute the default height.
     if (height === undefined) height = x1 - x0 + dx * 2 + axis_space;
 
-    svg.attr("viewBox", [-dy * padding / 2, x0 - dx, width, height])
+    svg.attr("viewBox", [0, x0 - dx, width, height])
         .attr("width", width)
         .attr("height", height)
         // .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
