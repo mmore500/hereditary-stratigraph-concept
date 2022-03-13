@@ -1,7 +1,28 @@
 \section{Results and Discussion} \label{sec:results}
 
-\input{tab/recency-proportional-space-complexity.tex}
+\subsection{Reconstruction Accuracy}
 
 \input{fig/reconstruction-example.tex}
+
+Across ground truth phylogenies, we were able to reconstruct the phylogenetic topology with between TODO\% and TODO\% accuracy within a 64-bit column memory footprint, between TODO\% and TODO\% within a 512-bit column memory footprint, and between TODO\% and TODO\% within a 4096-bit column memory footprint.
+As expected, we did observe more accurate reconstructions from columns that were allowed to occupy larger memory footprints.
+Figure \ref{fig:reconstruction-example} compares an example reconstruction from columns using tapered depth-proportional stratum retention, an example reconstruction using recency-proportional stratum retention,  and the underlying ground truth phylogeny.
+
+\subsection{Differentia Size}
+
+Among the surveyed ground truth phylogenies and target column footprints, we consistently found that smaller differentia were able to yield more or as accurate phylogenetic reconstructions.
+The stronger performance of narrow differentia was particularly apparent in low-memory-footprint scenarios where overall phylogenetic inference power was weaker.
+Overall, single-bit differentia outperformed 64-bit differentia under TODO condtions and were indistinguishable under TODO conditions.
+Full results are available in Supplementary Table todo.
+Although narrower differentia have less distinguishing power on their own, their smaller size allows more to be packed into the memory footprint to cover more generations, which seems to help reconstruction power.
+We must note that narrower differentia can pack more thoroughly into the footprint limitation we imposed on column size, so their extant columns tended to have slightly more overall bits.
+However, this was a small enough imbalance (in most cases <5\%) that we believe it is unlikely to fully account for the stronger performance of narrow-differentia configurations.
+
+\subsection{Retention Policy}
+
+Across the surveyed ground truth phylogenies and target column memory footprints, we found that the recency-proportional resolution stratum retention policy yielded equivalent or better phylogenetic reconstructions.
+Again, this effect was apparent in the small-footprint scenarios where overal inference power was weaker.
+The stronger performance of recency-proportional resolution is likely due to the denser retention of recent strata under the recency-proportional metric, which help to resolve the more numerous (and therefore typically more tightly spaced) phylogenetic events in the near past (TODO cite something about recency bias in phylogenetics).
+Recency-proportional resolution tended to be able to fit fewer strata within the prescribed memory footprints (except in cases where it could not fit within the footprint) so its stronger performance cannot be attributed to simply more retained bits in the end-state extant columns.
 
 \input{tab/experiment-column-sizes-nk-ecoeaselection.tex}
