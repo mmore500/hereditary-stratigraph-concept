@@ -7,6 +7,6 @@ set -e
 # enforce availability of dependencies
 . ./tidy/util/enforce_dependency.sh rename
 
-find ! -path "./cpp/third-party/*" ! -path "./.git/*" -type f | rename 's/\.h$/.hpp/'
-find ! -path "./cpp/third-party/*" ! -path "./.git/*" -type f | rename 's/\.c$/.cpp/'
-find ! -path "./cpp/third-party/*" ! -path "./.git/*" -type f | rename 's/\.cc$/.cpp/'
+find ! -path "./cpp/third-party/*" ! -path "./tex/submodules/*" ! -path "./.git/*" -type f | rename 's/\.h$/.hpp/'
+find ! -path "./cpp/third-party/*" ! -path "./tex/submodules/*" ! -path "./.git/*" -type f | rename 's/\.c$/.cpp/'
+find ! -path "./cpp/third-party/*" ! -path "./tex/submodules/*" ! -path "./.git/*" -type f | rename 's/\.cc$/.cpp/'

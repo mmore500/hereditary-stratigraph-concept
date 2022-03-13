@@ -36,8 +36,11 @@ cranky: FLAGS := -std=c++17 -pipe -pthread -g -Wall -Wno-unused-function -I$(TO_
 cranky: $(addprefix test-, $(TARGET_NAMES))
 	rm -rf test*.out
 
-$(TO_ROOT)/cpp/coverage_include:
-	./$(TO_ROOT)/cpp/cpp/tests/convert_for_tests.sh
+$(TO_ROOT)/cpp/third-party/force-cover/force_cover:
+	cd $(TO_ROOT)/cpp/third-party/ && ./install_force_cover.sh
+
+$(TO_ROOT)/cpp/coverage_include: $(TO_ROOT)/cpp/third-party/force-cover/force_cover
+	./$(TO_ROOT)/cpp/tests/convert_for_tests.sh
 
 $(TO_ROOT)/cpp/third-party/Catch/single_include/catch2/catch.hpp:
 	git submodule init

@@ -1,0 +1,49 @@
+\input{lib/importpath.tex}
+
+\begin{figure}
+  \centering
+%-------------------------------------------------------------------------------
+  \begin{subfigure}[b]{\linewidth}
+    \centering
+    % pass an arbitrary filename, potentially with unsafe characters
+    % adapted from https://tex.stackexchange.com/a/36178
+    \catcode`\%=12
+    \providecommand\filename{}
+    \renewcommand\filename{\detokenize{submodules/hereditary-stratigraph-concept/binder/phylogenetic-inference/teeplots/a=true_phylogeny+source=a%reconstructed_phylogenies~source%nk_ecoeaselection_seed110_pop100_mut.01_snapshot_3000.csv.gz+viz=draw+ext=}}
+    \catcode`\%=14
+    \includegraphics[width=\linewidth]{\importpath\filename}
+    \caption{1-bit Fingerprint Differentia, Tapered Depth-Proportional Resolution Stratum Retention Predicate, 64 bit target column footprint.}
+    \label{fig:reconstruction-example-true-phylogeny}
+  \end{subfigure}
+%-------------------------------------------------------------------------------
+  \begin{subfigure}[b]{\linewidth}
+    \centering
+    % pass an arbitrary filename, potentially with unsafe characters
+    % adapted from https://tex.stackexchange.com/a/36178
+    \catcode`\%=12
+    \providecommand\filename{}
+    \renewcommand\filename{\detokenize{submodules/hereditary-stratigraph-concept/binder/phylogenetic-inference/teeplots/source=a%reconstructed_phylogenies~source%nk_ecoeaselection_seed110_pop100_mut.01_snapshot_3000.csv.gz+treatment=differentia%1~policy%RecencyProportionalResolution~target%64+viz=draw-biopython-tree-with-origin-time-bounds+ext=}}
+    \catcode`\%=14
+    \includegraphics[width=\linewidth]{\importpath\filename}
+    \caption{1-bit Fingerprint Differentia, MRCA-Recency-Proportional Resolution Stratum Retention Predicate, 64 bit target column footprint.}
+    \label{fig:reconstruction-example-d1-rp-t64}
+  \end{subfigure}
+%-------------------------------------------------------------------------------
+  \begin{subfigure}[b]{\linewidth}
+    \centering
+    % pass an arbitrary filename, potentially with unsafe characters
+    % adapted from https://tex.stackexchange.com/a/36178
+    \catcode`\%=12
+    \providecommand\filename{}
+    \renewcommand\filename{\detokenize{submodules/hereditary-stratigraph-concept/binder/phylogenetic-inference/teeplots/source=a%reconstructed_phylogenies~source%nk_ecoeaselection_seed110_pop100_mut.01_snapshot_3000.csv.gz+treatment=differentia%1~policy%TaperedDepthProportionalResolution~target%64+viz=draw-biopython-tree-with-origin-time-bounds+ext=}}
+    \catcode`\%=14
+    \includegraphics[width=\textwidth]{\importpath\filename}
+    \caption{Differentia 1, tapered depth-proportional, target 64.}
+    \label{fig:reconstruction-example-d1-tdp-t64}
+  \end{subfigure}
+%-------------------------------------------------------------------------------
+  \caption{
+    Example phylogeny reconstructions from inference on extant hereditary stratigraphic columns.
+  }
+  \label{fig:reconstruction-example}
+\end{figure}
