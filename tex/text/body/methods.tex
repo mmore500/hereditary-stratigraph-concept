@@ -57,6 +57,8 @@ However, it is not necessary to store this data with known total generations dep
 We provide this formula for each stratum retention policy.
 Finally, useful for anticipating memory usage within an experiment, for each policy we provide a formula to calculate the exact number of strata retained under any parameterization after $k$ generations.
 
+In the next subsections, we introduce several stratum retention policies, provide the intuition behind their implementation, and elaborate their space complexity and resolution properties.
+
 \subsection{Fixed Resolution Stratum Retention Policy}
 Important property: because they're deterministic, when you compare two columns that are unfolding with the same policy, every stratum that is held by the older column before the generation of the newer column is also guaranteed to be held by that newer column.
 
@@ -64,11 +66,11 @@ Important property: because they're deterministic, when you compare two columns 
 Likely wouldn't ,
 We include it here for illustrative purposes.
 
-First row in Figure \ref{fig:retention-policies}
+Patterns of stratum retention under this policy are illustrated in the first row in Figure \ref{fig:retention-policies}.
+The formula for number of strata retained after $k$ generations, the formula to calculate stratum deposit generation from column index, and the retention predicate specification of the policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateFixedResolution} \citep{moreno2022hstratconceptsupplement}.
+The condemner generator specification of the policy is available in Supplementary Listing \ref{lst:StratumRetentionCondemnerFixedResolution} \citep{moreno2022hstratconceptsupplement}.
 
 \subsection{Depth-Proportional Resolution Stratum Retention Policy}
-
-Second row in Figure \ref{fig:retention-policies}
 
 This functor enacts the depth-proportional resolution policy by specifying
 whether a stratum with deposition rank r should be retained within the
@@ -110,9 +112,11 @@ as many as $guaranteed_depth_proportional_resolution$ are at hand. Then,
 every other retained stratum is purged and the cycle repeats with a new
 twice-as-wide interval between retained strata.
 
-\subsection{Tapered Depth-Proportional Resolution Stratum Retention Policy}
+Patterns of stratum retention under this policy are illustrated in the second row in Figure \ref{fig:retention-policies}.
+The formula for number of strata retained after $k$ generations, the formula to calculate stratum deposit generation from column index, and the retention predicate specification of the policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateDepthProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
+The condemner generator specification of the policy is available in Supplementary Listing \ref{lst:StratumRetentionCondemnerDepthProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
 
-Third row in Figure \ref{fig:retention-policies}
+\subsection{Tapered Depth-Proportional Resolution Stratum Retention Policy}
 
 elaborated so that unnecessary are removed gradually from back to front as new instead.
 This makes it easier for our experiments and likely would
@@ -141,9 +145,11 @@ every other retained stratum is purged gradually from back to front
 until the cycle repeats with a new twice-as-wide interval between
 retained strata.
 
-\subsection{MRCA-Recency-Proportional Resolution Stratum Retention Policy}
+Patterns of stratum retention under this policy are illustrated in the third row in Figure \ref{fig:retention-policies}.
+The formula for number of strata retained after $k$ generations, the formula to calculate stratum deposit generation from column index, and the retention predicate specification of the policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateTaperedDepthProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
+The condemner generator specification of the policy is available in Supplementary Listing \ref{lst:StratumRetentionCondemnerTaperedDepthProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
 
-Last row in Figure \ref{fig:retention-policies}
+\subsection{MRCA-Recency-Proportional Resolution Stratum Retention Policy}
 
 Functor to implement the MRCA-recency-proportional resolution stratum
 retention policy, for use with HereditaryStratigraphicColumn.
@@ -290,6 +296,11 @@ This expression for exact number deposited was extrapolated from
     * resolution = 0, <https://oeis.org/A063787> \citep{sloane2021a063787}
     * resolution = 1, <https://oeis.org/A056791> \citep{sloane2021a056791}
 and is unit tested extensively.
+
+Patterns of stratum retention under this policy are illustrated in the second row in Figure \ref{fig:retention-policies}.
+The formula for number of strata retained after $k$ generations, the formula to calculate stratum deposit generation from column index, and the retention predicate specification of the policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateRecencyProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
+The condemner generator specification of the policy is available in Supplementary Listing \ref{lst:StratumRetentionCondemnerRecencyProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
+
 
 \subsection{Computational Experiments}
 
