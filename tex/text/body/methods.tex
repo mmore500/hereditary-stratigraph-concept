@@ -105,151 +105,75 @@ The condemner generator specification of the policy is available in Supplementar
 
 \subsection{MRCA-Recency-Proportional Resolution Stratum Retention Policy}
 
-Functor to implement the MRCA-recency-proportional resolution stratum
-retention policy, for use with HereditaryStratigraphicColumn.
+The MRCA-recency-proportional resolution policy ensures distance between the retained strata surrounding any generation point will be less than or equal to a user-specified proportion $r$ of the number of generations elapsed since.
 
-This functor enacts the MRCA-recency-proportional resolution policy by
-specifying whether a stratum with deposition rank r should be retained
-within the hereditary stratigraphic column after n strata have been
-deposited.
-
-The MRCA-recency-proportional resolution policy ensures estimates of MRCA
-rank will have uncertainty bounds less than or equal to a user-specified
-proportion of the actual number of generations elapsed since the MRCA and
-the deepest of the compared columns. MRCA rank estimate uncertainty scales
-in the worst case scales as O(n) with respect to the greater number of
-strata deposited on either column. However, with respect to estimating the rank of the MRCA when lineages diverged any fixed number of generations ago,
-uncertainty scales as O(1).
-
-Under the MRCA-recency-proportional resolution policy, the number of strata
-retained (i.e., space complexity) scales as O(log(n)) with respect to the
-number of strata deposited.
-
-Decide if a stratum within the stratagraphic column should be
-retained or purged.
-
-Every time a new stratum is deposited, this method is called on each
-stratum present in a HereditaryStratigraphicColumn to determine whether
-it should be retained. Strata that return False are immediately purged
-from the column, meaning that for a stratum to persist it must earn a
-True result from this method each and every time a new stratum is
-deposited.
-
-This functor's retention policy implementation guarantees that columns
-will retain appropriate strata so that for any two columns with m and n
-strata deposited, the rank of the most recent common ancestor at rank k
-can be determined with uncertainty of at most
-
+This policy can be constructed recursively, so to begin, let's consider setting up just the \textit{first} generation $g$ of the stratum after the root ancestor we will retain when $n$ generations have elapsed.
+A simple geometric analysis reveals that providing the guaranteed resolution for the worst-case generation within the window between generation 0 and generation $g$ (i.e., generation $g-1$) requires
 \begin{align*}
-    bound = floor(
-        max(m - k, n - k)
-        / guaranteed_mrca_recency_proportional_resolution
-    )
+  g \leq \lfloor n / (r + 1) \rfloor
 \end{align*}
 
-ranks.
+We now have an upper bound for the rank of the first stratum generation
+we must retain.
+However, we must guarantee that these ranks are actually available for us to retain (i.e., it hasn't been purged out of the column at a previous time point as the column was grown by successive deposition).
+We will do this by picking the rank that is the highest power of 2 less than or equal to our bound.
+If we repeat this procedure as we recurse, we are guaranteed that this rank will have been preserved across all previous timepoints.
 
-How does the predicate work and how does it guarantee this resolution?
+Why does this work?
+Consider a sequence where all elements are powers of 2 and elements in the sequence are strictly nonincreasing.
+Consider the first element of the list.
+Partial sums of the sequence will include all multiples this element (less than or equal to the sum of the entire sequence).
+So, when we ratchet up $g$ to $2g$ as $n$ increases, we are guaranteed that $2g$ has been retained.
+This principle generalizes recursively down the list.
+This is a similar principle to the approach of strictly-doubling interval sizes used in the Naive and Tapered Depth-Proportional Resolution stratum retention policies described above.
 
-To begin, let's consider setting up just the *first* rank of the
-stratum after the root ancestor we will retain.
+This step of truncating to the nearest less than or equal to power of 2 affects our recursive step size at most only by a constant factor of 2.
+So, because step size is a constant fraction of remaining generations $n$ (at worst $\frac{1}{2(r+1)}$), the number of steps made (and number of strata retained) scales as $O(\log(n))$ with respect to the number of strata deposited.
+As for rank estimate uncertainty, in the worst case it scales as $O(n)$ with respect to the greater number of strata deposited.
+However, with respect to estimating the rank of the MRCA when lineages diverged any fixed number of generations ago, uncertainty scales as $O(1)$.
 
-
-% root ancestor                                     extant individual
-% |                                                                 |
-% |                    num_strata_deposited                         |
-% | ___________________________/\_________________________________  |
-% |/                                                               \|
-% |-------------------|#############################################|
-%  \_______  ________/|\____________________  ______________________/
-%          \/         |                     \/
-%    max_uncertainty  |            worst_case_mrca_depth
-%                     |
-%                     proposed retention rank
-
-To provide guaranteed resolution, $max_uncertainty$ must be leq than
-
-\begin{align*}
-   worst_case_mrca_depth // guaranteed_resolution
-\end{align*}
-
-So, to find the largest permissible $max_uncertainty$ we must solve
+How does space complexity scale with respect to the policy's specified resolution $r$?
+Through extrapolation from OEIS sequences A063787 and A056791 via guess and check \citep{sloane2021a063787,sloane2021a056791}, we posited the exact number of strata retained after $n$ generations as
 
 \begin{align*}
-   max_uncertainty = worst_case_mrca_depth // guaranteed_resolution
+  \mathrm{HammingWeight}(n)
+  + \sum_1^r \lfloor \log_2( \lfloor n / r \rfloor ) \rfloor
+  + 1.
 \end{align*}
-By construction we have
+
+This expression has been unit tested extensively to ensure perfect reliability.
+Approximating and applying logarithmic properties, this policy's space complexity can be calculated within a constant factor as
 
 \begin{align*}
-   worst_case_mrca_depth = num_strata_deposited - max_uncertainty
+\log(n) + \log\Big(\frac{n^r}{r!}\Big).
 \end{align*}
-Substituting into the above expression gives
+
+To answer our question, we will examine the ratio of space complexities required when scaling resolution $r$ up by a constant factor $f > 1$.
+Evaluating this ratio as $r \to \infty$, we find that space complexity scales directly proportional with the desired resolution $r$ at the limit,
 
 \begin{align*}
-   max_uncertainty
-   = (num_strata_deposited - max_uncertainty) // guaranteed_resolution
+\lim_{r \to \infty}
+\frac{
+  \log(n) + \log\Big(\frac{n^{fr}}{(fr)!}\Big).
+}{
+  \log(n) + \log\Big(\frac{n^r}{r!}\Big).
+}
+= f.
 \end{align*}
 
-Solving for $max_uncertainty$ yields
+Evaluating this ratio as $n \to \infty$, we find that this scaling relationship is never worse than directly proportional for any $r$,
 
 \begin{align*}
-  max_uncertainty
-  = num_strata_deposited // (guaranteed_resolution + 1)
+\lim_{n \to \infty}
+\frac{
+  \log(n) + \log\Big(\frac{n^{fr}}{(fr)!}\Big).
+}{
+  \log(n) + \log\Big(\frac{n^r}{r!}\Big).
+}
+&= \frac{fr+1}{r+1}\\
+&= f\frac{r + 1/f}{r + 1}\\
+&\leq f.
 \end{align*}
-
-We now have an upper bound for the rank of the first stratum rank
-we must retain. We can repeat this process recursively to select
-ranks that give adequate resolution proportional to
-$worst_case_mrca_depth$.
-
-However, we must guarantee that these ranks are actually available for
-us to retain (i.e., it hasn't been purged out of the column at a
-previous time point as the column was grown by successive deposition).
-We will do this by picking the rank that is the highest power of 2
-less than or equal to our bound. If we repeat this procedure as we
-recurse, we are guaranteed that this rank will have been preserved
-across all previous timepoints.
-
-This is because a partial sum sequence where all elements are powers
-of 2 and elements in the sequence are will include all multiples of
-powers of 2 greater than or equal to the first element that are less
-than or equal to the sum of the entire
-sequence.
-
-An example is the best way to convince yourself. Thinking analogously
-in base 10,
-
-   100 + 10... + 1...
-
-the partial sums of any sequence of this form will always include all
-multiples of powers of 100, 1000, etc. that are less than or equal to
-the sum of the entire sequence.
-
-In our application, partial sums represent retained ranks. So, all
-ranks that are perfect powers of 2 measuring from the root ancestor
-will have been retained after being deposited. This property
-generalizes recursively.
-
-The calculation can be written mathematically as,
-
-  weight of binary expansion of n (i.e., \#1's set in binary repr)
-  + sum(
-      floor( log2(n//r) )
-      for r from 1 to r inclusive
-  )
-  + 1
-
-where
-
-\begin{align*}
-  n = num_strata_deposited - 1
-  r = resolution
-\end{align*}
-
-This expression for exact number deposited was extrapolated from
-    * resolution = 0, <https://oeis.org/A063787> \citep{sloane2021a063787}
-    * resolution = 1, <https://oeis.org/A056791> \citep{sloane2021a056791}
-and is unit tested extensively.
 
 Patterns of stratum retention under this policy are illustrated in the second row in Figure \ref{fig:retention-policies}.
 The formula for number of strata retained after $k$ generations, the formula to calculate stratum deposit generation from column index, and the retention predicate specification of the policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateRecencyProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
