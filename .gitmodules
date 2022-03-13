@@ -7,3 +7,6 @@
   url = https://github.com/mmore500/hereditary-stratigraph-concept.git
   branch = binder
   shallow = true
+[submodule "tex/submodules/hstrat"]
+  path = tex/submodules/hstrat
+  url = https://github.com/mmore500/hstrat.git
