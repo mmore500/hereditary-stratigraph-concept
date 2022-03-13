@@ -60,11 +60,14 @@ Finally, useful for anticipating memory usage within an experiment, for each pol
 In the next subsections, we introduce several stratum retention policies, provide the intuition behind their implementation, and elaborate their space complexity and resolution properties.
 
 \subsection{Fixed Resolution Stratum Retention Policy}
-Important property: because they're deterministic, when you compare two columns that are unfolding with the same policy, every stratum that is held by the older column before the generation of the newer column is also guaranteed to be held by that newer column.
 
+The fixed resolution retention policy provides a fixed absolute upper bound $r$ on the spacing between retained stratum.
+The strategy to obtain this property is simple: permanently retain a stratum every $r$th generation.
+(Although, for arbitrary reasons of implementation convenience we require each stratum to be retained during at least the generation they are deposited).
 
-Likely wouldn't ,
-We include it here for illustrative purposes.
+However, this retention policy suffers from linear growth in a column's memory footprint with respect to number of generations elapsed: every $r$th generation generation a new stratum is permanently retained
+For this reason, it is likely not useful in practice except potentially in scenarios where the number of generations used for a digital evolution simulation is fixed in advance.
+We include it here largely for illustrative purposes as a gentle introduction to retention policy.
 
 Patterns of stratum retention under this policy are illustrated in the first row in Figure \ref{fig:retention-policies}.
 The formula for number of strata retained after $k$ generations, the formula to calculate stratum deposit generation from column index, and the retention predicate specification of the policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateFixedResolution} \citep{moreno2022hstratconceptsupplement}.
