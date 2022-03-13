@@ -23,10 +23,13 @@ Interestingly, and powerfully for phylogenetic inference, we can readily disting
 Figure \ref{fig:column-comparison} depicts the process of comparing columns for phylogenetic inference.
 
 Shifting now from intuition to implementation, a fixed-length randomly-generated binary tag provides a convenient and efficient mechanism to differentiate between our metaphorical ``layers.''
+We call this ``fingerprint'' tag a \textit{differentia}.
 The width of this tag is a key parameter to explore.
 At 64 bits wide the tag essentially functions as a UID: collisions between randomly generated tags are so unlikely ($p < 5.42\times10^{-20}$) they can essentially be ignored.
-At the other end of the spectrum, collision probability would be 1 in 256 for a single byte and 1 in 2 for a single bit.
-For this reason, as it can be configured to experience collisions with non-trivial probability, we call this ``fingerprint'' tag a \textit{differentia}.
+At the other end of the spectrum, collision probability would be $1/256$ for a single byte and $1/2$ for a single bit.
+In the case of narrow differentia, in order to set a lower bound for the MRCA generation, you would have to backtrack common strata from the last commonality until the probability of that many successive spurious collisions was enough to satisfied your desired confidence level (e.g., 95\% confidence).
+Even then, there would be a possibility of the the true MRCA falling before the lower bound.
+Note, however, that no matter the width of the differentia the generation of the first discrepancy provides a hard upper bound on the generation of the MRCA.
 
 In accordance with the geological analogy, we refer to the packet of data accumulated each generation as a \textit{stratum}.
 This packet contains the differentia and, although not employed in this work, potentially other arbitrary user-defined data (i.e., simulation timestamp, phenotype characteristics, etc.).
