@@ -117,7 +117,7 @@ The MRCA-recency-proportional resolution policy ensures distance between the ret
 This policy can be constructed recursively, so to begin, let's consider setting up just the \textit{first} generation $g$ of the stratum after the root ancestor we will retain when $n$ generations have elapsed.
 A simple geometric analysis reveals that providing the guaranteed resolution for the worst-case generation within the window between generation 0 and generation $g$ (i.e., generation $g-1$) requires
 \begin{align*}
-  g \leq \lfloor n / (r + 1) \rfloor
+  g \leq \lfloor n / (r + 1) \rfloor.
 \end{align*}
 
 We now have an upper bound for the rank of the first stratum generation
@@ -248,4 +248,3 @@ Our work benefited from many pieces of open source scientific software, includin
 The ground truth phylogenies used in this work are available via the Open Science Framework at
 \url{https://osf.io/4sm72/} \citep{moreno2022hstratconceptsupplement} \citep{foster2017open}.
 Phylogenetic data associated with this project is stored in the Alife Community Data Standards format \citep{lalejini2019data}.
-
