@@ -93,32 +93,11 @@ The condemner generator specification of the policy is available in Supplementar
 
 \subsection{Tapered Depth-Proportional Resolution Stratum Retention Policy}
 
-elaborated so that unnecessary are removed gradually from back to front as new instead.
-This makes it easier for our experiments and likely would
-
-Functor to implement the tapered depth-proportional resolution stratum
-retention policy, for use with HereditaryStratigraphicColumn.
-
-This functor enacts the tapered depth-proportional resolution policy by
-specifying whether a stratum with deposition rank r should be retained
-within the hereditary stratigraphic column after n strata have been
-deposited.
-
-The tapered depth-proportional resolution policy ensures estimates of MRCA
-rank will have uncertainty bounds less than or equal to a user-specified
-proportion of the largest number of strata deposited on either column.
-Thus, MRCA rank estimate uncertainty scales as O(n) with respect to the
-greater number of strata deposited on either column.
-
-Under the tapered depth-proportional resolution policy, the number of strata
-retained (i.e., space complexity) scales as O(1) with respect to the number
-of strata deposited.
-
-This policy accumulates retained strata at a fixed interval until twice
-as many as $guaranteed_depth_proportional_resolution$ are at hand. Then,
-every other retained stratum is purged gradually from back to front
-until the cycle repeats with a new twice-as-wide interval between
-retained strata.
+This policy refines the depth-proportional resolution policy to provide a more stable column memory footprint over time.
+The naive depth-proportional resolution policy builds up strata until twice as many are present as needed then purges half of them all at once.
+The tapered depth-proportional resolution policy functions identically to the depth-proportional policy except that it removes unnecessary strata gradually from back to front as new strata are deposited instead of eliminating them simultaneously.
+The column footprint stability of this variation makes it easier to parameterize our experiments to ensure comparable end-state column footprints for fair comparison between retention policies and likely would be better suited to most use cases.
+By design, this policy has the same space complexity and MRCA estimation uncertainty scaling relationships with number generations elapsed as the naive depth-proporitonal resolution policy.
 
 Patterns of stratum retention under this policy are illustrated in the third row in Figure \ref{fig:retention-policies}.
 The formula for number of strata retained after $k$ generations, the formula to calculate stratum deposit generation from column index, and the retention predicate specification of the policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateTaperedDepthProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
