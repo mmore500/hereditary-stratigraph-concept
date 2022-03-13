@@ -61,7 +61,7 @@ In the next subsections, we introduce several stratum retention policies, provid
 
 \subsection{Fixed Resolution Stratum Retention Policy}
 
-The fixed resolution retention policy provides a fixed absolute upper bound $r$ on the spacing between retained stratum.
+The fixed resolution retention policy provides a fixed absolute upper bound $r$ on the spacing between retained strata.
 The strategy to obtain this property is simple: permanently retain a stratum every $r$th generation.
 (Although, for arbitrary reasons of implementation convenience we require each stratum to be retained during at least the generation they are deposited).
 
@@ -75,45 +75,17 @@ The condemner generator specification of the policy is available in Supplementar
 
 \subsection{Depth-Proportional Resolution Stratum Retention Policy}
 
-This functor enacts the depth-proportional resolution policy by specifying
-whether a stratum with deposition rank r should be retained within the
-hereditary stratigraphic column after n strata have been deposited.
+The depth-proportional resolution policy ensures spacing between retained strata will be less than or equal to a proportion $r$ of total number of strata deposited.
+Achieving this limit on uncertainty requires retaining sufficient strata so that no more than $r$ ranks elapsed between any two strata.
+This policy accumulates retained strata at a fixed interval until twice as many as $r$ are at hand.
+Then, every other retained stratum is purged and the cycle repeats with a new twice-as-wide interval between retained strata.
 
-The depth-proportional resolution policy ensures estimates of MRCA rank will
-have uncertainty bounds less than or equal to a user-specified
-proportion of the largest number of strata deposited on either column.
-Thus, MRCA rank estimate uncertainty scales as O(n) with respect to the
-greater number of strata deposited on either column.
+When comparing stratigraphic columns from different generations, the resolution guarantee holds in terms of the number of generations experienced by the older of the two columns.
+Because this retention policy is deterministic, for two columns with the same policy, every stratum that is held by the older column is also guaranteed to be present in the younger column (unless it hasn't yet been deposited on the younger column).
+Therefore, the strata that would enable the desired resolution when comparing two columns of the same age are guaranteed to be available.
 
-Under the depth-proportional resolution policy, the number of strata
-retained (i.e., space complexity) scales as O(1) with respect to the number
-of strata deposited.
-
-Decide if a stratum within the stratagraphic column should be
-retained or purged.
-
-Every time a new stratum is deposited, this method is called on each
-stratum present in a HereditaryStratigraphicColumn to determine whether
-it should be retained. Strata that return False are immediately purged
-from the column, meaning that for a stratum to persist it must earn a
-True result from this method each and every time a new stratum is
-deposited.
-
-This functor's retention policy implementation guarantees that columns
-will retain appropriate strata so that for any two columns with m and n
-strata deposited, the rank of the most recent common ancestor can be
-determined with uncertainty of at most
-
-\begin{align*}
-    bound = floor(max(m, n) / guaranteed_depth_proportional_resolution)
-\end{align*}
-
-ranks. Achieving this limit on uncertainty requires retaining sufficient
-strata so that no more than bound ranks elapsed between any two strata.
-This policy accumulates retained strata at a fixed interval until twice
-as many as $guaranteed_depth_proportional_resolution$ are at hand. Then,
-every other retained stratum is purged and the cycle repeats with a new
-twice-as-wide interval between retained strata.
+Because the number of strata retained under this policy is bounded as $2n+1$, space complexity scales as $O(1)$ with respect to the number of strata deposited.
+It follows that the MRCA rank estimate uncertainty scales as $O(n)$ with respect to the number of strata deposited.
 
 Patterns of stratum retention under this policy are illustrated in the second row in Figure \ref{fig:retention-policies}.
 The formula for number of strata retained after $k$ generations, the formula to calculate stratum deposit generation from column index, and the retention predicate specification of the policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateDepthProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
