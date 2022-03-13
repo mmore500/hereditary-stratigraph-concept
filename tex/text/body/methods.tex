@@ -62,6 +62,8 @@ Finally, useful for anticipating memory usage within an experiment, for each pol
 
 In the next subsections, we introduce several stratum retention policies, provide the intuition behind their implementation, and elaborate their space complexity and resolution properties.
 
+\input{fig/retention-policies.tex}
+
 \subsection{Fixed Resolution Stratum Retention Policy}
 
 The fixed resolution retention policy provides a fixed absolute upper bound $r$ on the spacing between retained strata.
@@ -185,21 +187,41 @@ The condemner generator specification of the policy is available in Supplementar
 
 \subsection{Computational Experiments}
 
-In order to assess the hereditary stratigraph approach in an applied setting, we simulated the process of stratigraph propagation over known ``ground truth'' phylogenies extracted from pre-existing digital evolution simulations.
-These simulations propagated populations of between X and Y bitstrings between 3,000 and 5,000 generations under the NK fitness landscape model (TODO cite).
-In order to ensure coverage of a variety of phylogenetic conditions, we sampled a variety of selection schemes that impose profoundly different ecological regimens (cite Emily's paper).
-We used five data sets:
+In order to assess the practical performance of the hereditary stratigraph approach in an applied setting, we simulated the process of stratigraph propagation over known ``ground truth'' phylogenies extracted from pre-existing digital evolution simulations.
+These simulations propagated populations of between X and Y bitstrings between 3,000 and 5,000 generations under the NK fitness landscape model \citep{kauffman1989nk}.
+In order to ensure coverage of a variety of phylogenetic conditions, we sampled a variety of selection schemes that impose profoundly different ecological regimens \citep{dolson2018ecological},
 \begin{itemize}
-  \item EcoEA Selection,
-  \item Lexicase Selection,
+  \item EcoEA Selection \citep{goings2012ecology},
+  \item Lexicase Selection \citep{helmuth2014solving},
   \item Random Selection,
-  \item Tournament Selection, and
-  \item TODO missing one.
+  \item Sharing Selection \citep{goldberg1987genetic}, and
+  \item Tournament Selection \citep{miller1995genetic}.
 \end{itemize}
 
 Supplementary Table TODO provides full details on the configured conditions of each run.
 The phylogenies themselves are available in our data repository for this project.
 
+For each ground truth phylogeny, we tested combinations of three configuration parameters:
+\begin{itemize}
+  \item target end-state memory footprints for extant columns (64, 512, and 4096 bits),
+  \item differentia width (1, 8, and 64 bits), and
+  \item stratum retention policy (tapered depth-proportional resolution and recency-proportional resolution).
+\end{itemize}
+
+Stratum retention policies were parameterized so that the maximum number of strata possible were present at the end of the without exceeding the target memory footprint.
+If the target memory footprint is exceeded by the sparsest possible parameterization of a retention policy, then that sparsest possible parameterization is used.
+Supplementary Tables Todo provide the calculated paramaterizations and memory footprints of extant columns.
+
+In order to assess the viability of phylogenetic inference using hereditary stratigraphic columns from extant organisms, we used the end-state stratigraphs to estimate a reconstruction of the actual ground truth phylogenetic histories.
+
+\input{fig/phylogenetic-inference.tex}
+
+The first step to reconstructing a phylogenetic tree for the history of an extant population at the end of an experiment is to construct a distance matrix by calculating all pairwise phylogenetic distances between extant columns.
+We defined phylogenetic distance between two extant columns as the sum of each extant organism's generational distance back to the generation of their MRCA, estimated as the mean of the upper and lower 95\% confidence bounds
+Figure \ref{fig:phylogenetic-inference} depicts the process of calculating phylogenetic distance between two extant columns.
+
+We then used the unweighted pair group method with arithmetic mean (UPGMA) reconstruction tool provided by the BioPython package to generate estimate phylogenetic trees \citep{cock2009biopython,sokal1958statistical}.
+%We found that the neighbor joining (NJ) approach occasionally yielded reconstructions with impossible ``negative generation'' branches \citep{saitou1987neighbor} after knowledge bounding the absolute generation of internal nodes (i.e., MRCA's between pairs of extant organisms) was applied, so we did not use it.
 
 \subsection{Software and Data}
 
@@ -208,24 +230,18 @@ A prototype of this approach has been implemented \url{https://github.com/mmore5
 A Python library with a stable public-facing API intended to enable incorporation in other projects has been published with extensive documentation and unit testing on GitHub at \url{https://github.com/mmore500/hstrat} and on PyPI at \url{https://pypi.org/project/hstrat/}.
 In the near future, we intend to complete and publish a corresponding C++ library.
 
-We used many open source libraries in this work:
+Supporting software materials can be found on GitHub at \url{https://github.com/mmore500/hereditary-stratigraph-concept}
+Supporting computational notebooks are available for in-browser use via BinderHub at \url{https://mybinder.org/v2/gh/mmore500/hereditary-stratigraph-concept/HEAD?labpath=binder%2F} \citep{ragan2018binder}.
+Our work benefited from many pieces of open source scientific software, including
 * \citep{sukumaran2010dendropy}
-* \citep{cock2009biopython}
 * \citep{virtanen2020scipy}
 * \citep{hunter2007matplotlib}
 * \citep{virtanen2020scipy}
 * \citep{waskom2021seaborn}
 * \citep{bostock2011d3}
-* \citep{lalejini2019data}
-
-All supporting materials on GitHub at \url{https://github.com/mmore500/hereditary-stratigraph-concept} and notebooks are available for in-browser use via BinderHub at \url{https://mybinder.org/v2/gh/mmore500/hereditary-stratigraph-concept/HEAD?labpath=binder%2F} \citep{ragan2018binder}.
-Data used in this work is available via the Open Science Framework at
+* \citep{meurer2017sympy}
+* R package?
+The ground truth phylogenies used in this work are available via the Open Science Framework at
 \url{https://osf.io/4sm72/} \citep{moreno2022hstratconceptsupplement} \citep{foster2017open}.
+Phylogenetic data associated with this project is stored in the Alife Community Data Standards format \citep{lalejini2019data}.
 
-Our data is made available in the Alife Community Data Standards format \citep{lalejini2019data}.
-
-\input{fig/retention-policies.tex}
-
-
-
-\input{fig/phylogenetic-inference.tex}
