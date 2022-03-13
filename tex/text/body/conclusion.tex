@@ -1,1 +1,21 @@
 \section{Conclusion} \label{sec:conclusion}
+
+To our knowledge, this work provides a novel solution to the unexplored problem of designing digital genome components that enable phylogenetic reconstruction in the absence of phylogenetic tracking.
+
+Such techniques will be essential for artificial life experiments that use distributed and best-effort computing approaches.
+These methods will enable phylogenetic analyses in distributed, best-effort systems while preserving those systems' efficiency and scalability.
+As parallel and distributed computing becomes increasingly ubiquitous and begins to more widely pervade artificial life systems, this will be a useful technique in the toolbox.
+These techniques may, in addition, serve some use in traditional serial artificial life simulations as a stopgap in the absence of infrastructure for proper phylogenetic tracking or for scenarios with extensive serialization and deserialization of individuals.
+
+Finally, the problem of designing genomes to maximize phylogenetic reconstructability raises unique questions about phylogenetic estimation.
+Such a backward problem --- optimizing genomes to make analyses trivial as opposed to the usual process of optimizing analyses to genomes --- puts questions about the genetic information analyses operate on in a new light.
+In particular, the problem of maximum-reconstructability is well suited to extension to derive results on best-case certain bounds of reconstruction algorithms.
+In future work, it may be especially interesting to consider the problem of maximizing reconstructibility for a fixed-size genetic component.
+
+Future work:
+* fixed size retention policy favors more recent strata
+* sexual recombination
+  * annotation individual genome components
+  * gene drive mechanism
+* time complexity analysis and computational benchmarking of alternate data structures for holding strata (vector, hash map, linked list)
+* to understand resolution guarantees with single-bit differentia
