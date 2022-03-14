@@ -196,7 +196,7 @@ jobs:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-20.04
     # disable auto-deploy because put content on gh pages branch manually
-    if: false && github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cut-cookie'
+    if: false #&& github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cut-cookie'
     needs:
       - binder
       - cpp-coverage
