@@ -1,21 +1,24 @@
 \section{Conclusion} \label{sec:conclusion}
 
-To our knowledge, this work provides a novel solution to the unexplored problem of designing digital genome components that enable phylogenetic reconstruction in the absence of phylogenetic tracking.
+To our knowledge, this work provides a novel design for digital genome components that enable phylogenetic inference on asexual populations without perfect phylogenetic tracking, which is complex and possibly cumbersome in distributed computing scenarios, especially with fallible nodes.
+Our approach enables flexible, explicit trade-offs between space complexity and inference accuracy.
+Hereditary stratigraphic columns are efficient: our approach can provide, for example, estimation of the MRCA generation within 10\% with 95\% confidence up to a depth of a trillion generations with genome annotations smaller than a kilobyte.
+However, they are also powerful: we were able to achieve reconstructions with only X\% error of 3,000 to 5,000 generation phylogenies using X-bit columns.
 
-Such techniques will be essential for artificial life experiments that use distributed and best-effort computing approaches.
-These methods will enable phylogenetic analyses in distributed, best-effort systems while preserving those systems' efficiency and scalability.
-As parallel and distributed computing becomes increasingly ubiquitous and begins to more widely pervade artificial life systems, this will be a useful technique in the toolbox.
-These techniques may, in addition, serve some use in traditional serial artificial life simulations as a stopgap in the absence of infrastructure for proper phylogenetic tracking or for scenarios with extensive serialization and deserialization of individuals.
+This and other methodology to enable decentralized observation and analysis of evolving systems will be essential for artificial life experiments that use distributed and best-effort computing approaches.
+Such systems will be crucial to enabling advances in the field of artificial life, particularly with respect to the question of open-ended evolution \citep{ackley2011pursue,moreno2021conduit,moreno2021case}
+Such methods will be crucial to enabling experimental analyses in distributed, best-effort systems while preserving those systems' efficiency and scalability.
+As parallel and distributed computing becomes increasingly ubiquitous and begins to more widely pervade artificial life systems, hereditary stratigraphy should serve as a useful technique in this toolbox.
+%TODO add citations to this Paragraph
 
-Finally, the problem of designing genomes to maximize phylogenetic reconstructability raises unique questions about phylogenetic estimation.
+Important work extending and analyzing hereditary stratigraphy remains to be done.
+Analyses should be performed to expound MRCA resolution guarantees of stratum retention policies when using narrow (i.e., single-bit differentia)
+Constant-size-complexity stratum retention policies that preferentially retain a denser sampling of more-recent strata should be developed and analyzed.
+Extensions to sexual populations should be explored, including the possibility of annotating and tracking individual genome components instead of whole-genome individuals.
+An alternate approach might be to define a preferential inheritance rule so that at each column generation slot, a single differentia sweeps over an entire interbreeding population.
+Optimization of tree reconstruction from extant hereditary stratigraphs remains an open question, too.
+It would be particularly valuable to develop methodology to annotate inner nodes of trees reconstructed from hereditary stratigraphs with confidence levels.
+
+The problem of designing genomes to maximize phylogenetic reconstructability raises unique questions about phylogenetic estimation.
 Such a backward problem --- optimizing genomes to make analyses trivial as opposed to the usual process of optimizing analyses to genomes --- puts questions about the genetic information analyses operate on in a new light.
-In particular, the problem of maximum-reconstructability is well suited to extension to derive results on best-case certain bounds of reconstruction algorithms.
-In future work, it may be especially interesting to consider the problem of maximizing reconstructibility for a fixed-size genetic component.
-
-Future work:
-* fixed size retention policy favors more recent strata
-* sexual recombination
-  * annotation individual genome components
-  * gene drive mechanism
-* time complexity analysis and computational benchmarking of alternate data structures for holding strata (vector, hash map, linked list)
-* to understand resolution guarantees with single-bit differentia
+In particular, it would be valuable to derive upper bounds on phylogenetic inference accuracy given genome size and generations elapsed.
