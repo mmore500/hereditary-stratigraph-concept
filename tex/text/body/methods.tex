@@ -105,7 +105,8 @@ The column footprint stability of this variation makes it easier to parameterize
 By design, this policy has the same space complexity and MRCA estimation uncertainty scaling relationships with number generations elapsed as the naive depth-proporitonal resolution policy.
 
 Patterns of stratum retention under this policy are illustrated in the third row in Figure \ref{fig:retention-policies}.
-The formula for number of strata retained after $k$ generations, the formula to calculate stratum deposit generation from column index, and the retention predicate specification of the policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateTaperedDepthProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
+The resolution of MRCA estimation under this policy can also be explored via an interactive in-browser web applet at \url{hopth.ru/bi}.
+The formula for number of strata retained after $n$ generations, the formula to calculate stratum deposit generation from column index, and the retention predicate specification of the policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateTaperedDepthProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
 The condemner generator specification of the policy is available in Supplementary Listing \ref{lst:StratumRetentionCondemnerTaperedDepthProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
 
 \subsection{MRCA-Recency-Proportional Resolution Stratum Retention Policy}
@@ -229,22 +230,14 @@ We then used the unweighted pair group method with arithmetic mean (UPGMA) recon
 
 \subsection{Software and Data}
 
-A prototype of this approach has been implemented \url{https://github.com/mmore500/dishtiny/blob/incoming/include/dish2/genome/PhyloFingerprints.hpp} and preliminarily tested \url{https://github.com/mmore500/dishtiny/blob/incoming/tests/dish2/genome/PhyloFingerprints.cpp}.
+% A prototype of this approach has been implemented \url{https://github.com/mmore500/dishtiny/blob/incoming/include/dish2/genome/PhyloFingerprints.hpp} and preliminarily tested \url{https://github.com/mmore500/dishtiny/blob/incoming/tests/dish2/genome/PhyloFingerprints.cpp}.
 
-A Python library with a stable public-facing API intended to enable incorporation in other projects has been published with extensive documentation and unit testing on GitHub at \url{https://github.com/mmore500/hstrat} and on PyPI at \url{https://pypi.org/project/hstrat/}.
+As part of this work, we published the \texttt{hstrat} Python library with a stable public-facing API intended to enable incorporation in other projects with extensive documentation and unit testing on GitHub at \url{https://anonymous.4open.science/r/hstrat-115D/} and on PyPI.% at \url{https://pypi.org/project/hstrat/}. https://github.com/mmore500/hstrat
 In the near future, we intend to complete and publish a corresponding C++ library.
 
-Supporting software materials can be found on GitHub at \url{https://github.com/mmore500/hereditary-stratigraph-concept}
-Supporting computational notebooks are available for in-browser use via BinderHub at \url{https://mybinder.org/v2/gh/mmore500/hereditary-stratigraph-concept/HEAD?labpath=binder%2F} \citep{ragan2018binder}.
-Our work benefited from many pieces of open source scientific software, including
-* \citep{sukumaran2010dendropy}
-* \citep{virtanen2020scipy}
-* \citep{hunter2007matplotlib}
-* \citep{virtanen2020scipy}
-* \citep{waskom2021seaborn}
-* \citep{bostock2011d3}
-* \citep{meurer2017sympy}
-* R package?
-The ground truth phylogenies used in this work are available via the Open Science Framework at
-\url{https://osf.io/4sm72/} \citep{moreno2022hstratconceptsupplement} \citep{foster2017open}.
+Supporting software materials can be found on GitHub at \url{https://anonymous.4open.science/r/hereditary-stratigraph-concept-6BEC/}.%\url{https://github.com/mmore500/hereditary-stratigraph-concept}
+Supporting computational notebooks are available for in-browser use via BinderHub at \url{ANONYMIZED FOR PEER REVIEW} \citep{ragan2018binder}. %https://mybinder.org/v2/gh/mmore500/hereditary-stratigraph-concept/HEAD?labpath=binder%2F
+Our work benefited from many pieces of open source scientific software, including \citep{sukumaran2010dendropy,virtanen2020scipy,hunter2007matplotlib,virtanen2020scipy,waskom2021seaborn,bostock2011d3,meurer2017sympy,smith2020treedistdata,paradis2004ape,ushey2022reticulate,wickham2022dplyr}.
+The ground truth phylogenies used in this work as well as supplementary figures, tables, and text are available via the Open Science Framework at
+\url{https://osf.io/4sm72/?view_only=69f37c6d184143b7855299c3323749ea} \citep{moreno2022hstratconceptsupplement} \citep{foster2017open}.
 Phylogenetic data associated with this project is stored in the Alife Community Data Standards format \citep{lalejini2019data}.
