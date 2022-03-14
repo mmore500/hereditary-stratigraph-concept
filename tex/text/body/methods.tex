@@ -186,14 +186,14 @@ Evaluating this ratio as $n \to \infty$, we find that this scaling relationship 
 \end{align*}
 
 Patterns of stratum retention under this policy are illustrated in the second row in Figure \ref{fig:retention-policies}.
-The formula for number of strata retained after $k$ generations, the formula to calculate stratum deposit generation from column index, and the retention predicate specification of the policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateRecencyProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
+The resolution of MRCA estimation under this policy can also be explored via an interactive in-browser web applet at \url{https://hopth.ru/bh}.
+The formula for number of strata retained after $n$ generations, the formula to calculate stratum deposit generation from column index, and the retention predicate specification of the policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateRecencyProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
 The condemner generator specification of the policy is available in Supplementary Listing \ref{lst:StratumRetentionCondemnerRecencyProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
-
 
 \subsection{Computational Experiments}
 
-In order to assess the practical performance of the hereditary stratigraph approach in an applied setting, we simulated the process of stratigraph propagation over known ``ground truth'' phylogenies extracted from pre-existing digital evolution simulations.
-These simulations propagated populations of between X and Y bitstrings between 3,000 and 5,000 generations under the NK fitness landscape model \citep{kauffman1989nk}.
+In order to assess the practical performance of the hereditary stratigraph approach in an applied setting, we simulated the process of stratigraph propagation over known ``ground truth'' phylogenies extracted from pre-existing digital evolution simulations \citep{dolson2018applying}.
+These simulations propagated populations of between 100 and 165 bitstrings between 500 and 5,000 synchronous generations under the NK fitness landscape model \citep{kauffman1989nk}.
 In order to ensure coverage of a variety of phylogenetic conditions, we sampled a variety of selection schemes that impose profoundly different ecological regimens \citep{dolson2018ecological},
 \begin{itemize}
   \item EcoEA Selection \citep{goings2012ecology},
