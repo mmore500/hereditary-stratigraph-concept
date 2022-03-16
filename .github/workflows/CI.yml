@@ -192,6 +192,26 @@ jobs:
           name: manuscript
           path: /opt/hereditary-stratigraph-concept/tex/hereditary-stratigraph-concept-draft.pdf
 
+  latex-extended-abstract:
+    name: Latex Extended Abstracit Build
+    runs-on: ubuntu-20.04
+    needs:
+      - docker-teximage-build
+    container:
+      image: ghcr.io/mmore500/hereditary-stratigraph-concept:GITHUB_ACTION_${{ github.run_number }}_TEXIMAGE
+      # github actions requires root to access mounted volumes
+      options: --user root
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - run: make -C /opt/hereditary-stratigraph-concept/tex-extended-abstract
+      - name: Upload output as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: manuscript
+          path: /opt/hereditary-stratigraph-concept/tex/hereditary-stratigraph-concept-draft.pdf
+
   deploy-pages:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-20.04
@@ -204,6 +224,7 @@ jobs:
       - cpp-unit
       - docs
       - latex
+      - latex-extended-abstract
       - py-unit
       - tidy
     container:
@@ -234,6 +255,7 @@ jobs:
       - cpp-unit
       - docs
       - latex
+      - latex-extended-abstract
       - py-unit
       - tidy
     steps:
