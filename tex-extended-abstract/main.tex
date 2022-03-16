@@ -1,0 +1,40 @@
+\documentclass[sigconf]{acmart}
+
+\setcopyright{acmcopyright}
+\copyrightyear{2022}
+\acmYear{2022}
+\acmDOI{TODO}
+
+%% These commands are for a PROCEEDINGS abstract or paper.
+\acmConference[GECCO '22]{GECCO '22: The Genetic and Evolutionary Computation Conference}{July 09--13, 2022}{Boston, MA}
+\acmBooktitle{GECCO '22: The Genetic and Evolutionary Computation Conference,
+  July 09--13, 2022, Boston, MA}
+\acmPrice{15.00}
+\acmISBN{TODO}
+\acmSubmissionID{TODO}
+
+
+\input{lib/dependencies.tex}
+\input{lib/pragmaonce.tex}
+
+\ifdefined\mydraft
+\mydraft
+\fi
+
+\defaultbibliography{bibl}
+\defaultbibliographystyle{apalike}
+\begin{document}
+
+\input{text/frontmatter.tex}
+
+\begin{bibunit}
+
+\input{text/body.tex}
+
+\input{text/acknowledgement.tex}
+
+\input{text/references.tex}
+
+\end{bibunit}
+
+\end{document}
