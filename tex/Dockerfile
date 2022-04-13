@@ -27,6 +27,18 @@ RUN \
     && \
   echo "removed -backports, -updates, -proposed, -security repositories"
 
+# magic to fix java installation conflict in subsequent apt install
+# see https://github.com/geerlingguy/ansible-role-java/issues/64
+RUN \
+  apt-get update -q --allow-unauthenticated \
+    && \
+  apt-get install -qy --no-install-recommends \
+    man \
+    && \
+  rm -rf /var/lib/apt/lists/* \
+    && \
+  mkdir /usr/share/man/man1/
+
 RUN \
   apt-get update -q --allow-unauthenticated \
     && \
@@ -36,6 +48,8 @@ RUN \
     make \
     moreutils \
     nodejs \
+    pcregrep \
+    pdftk \
     && \
   rm -rf /var/lib/apt/lists/*
 
