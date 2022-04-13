@@ -19,7 +19,7 @@ Processes would dispatch notifications of birth and death events to the server, 
 Unfortunately, this server model approach would present profound scalability challenges: communication and computation burden on the server process would worsen in direct proportion to processor count, and processes would frequently need to pause while waiting for confirmation that a reproduction event was successfully reported.
 % ELD: This is making me wonder if there's a middle ground that could be explored in the future where we could use a sort of UDP phylogeny protocol, where no confirmation occurs
 A more scalable approach would record birth and death events only on the process(es) where they unfold.
-Even this localized technique would lead to serious performance challenges, however. 
+Even this localized technique would lead to serious performance challenges, however.
 Lineages that went extinct locally could not be safely garbage collected until the extinction of thair offspring's lineages on other processors could be confirmed.
 Thus, garbage collection would require extinction notifications to wind back across processes each lineage had traversed.
 

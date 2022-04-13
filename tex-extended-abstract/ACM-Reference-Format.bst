@@ -436,19 +436,19 @@ FUNCTION { output.coden }       % UTAH
 FUNCTION { strip.articleno.or.eid }
 {
   't :=
-  t #1 #7 substring$ "Article" = 
+  t #1 #7 substring$ "Article" =
     {t #8 t text.length$ substring$ 't :=}
     { }
   if$
-  t #1 #7 substring$ "article" = 
+  t #1 #7 substring$ "article" =
     {t #8 t text.length$ substring$ 't :=}
     { }
   if$
-  t #1 #5 substring$ "Paper" = 
+  t #1 #5 substring$ "Paper" =
     {t #6 t text.length$ substring$ 't :=}
     { }
   if$
-  t #1 #5 substring$ "paper" = 
+  t #1 #5 substring$ "paper" =
     {t #6 t text.length$ substring$ 't :=}
     { }
   if$
@@ -456,12 +456,12 @@ FUNCTION { strip.articleno.or.eid }
   t #1 #1 substring$ " " =
     {t #2 t text.length$ substring$ 't :=}
     { }
-  if$ 
+  if$
   t #1 #1 substring$ "~" =
     {t #2 t text.length$ substring$ 't :=}
     { }
   if$
-  t 
+  t
 }
 
 
@@ -718,7 +718,7 @@ FUNCTION { output.eprint } %
            }
            { "[" archiveprefix "l" change.case$ "]" * * * }
          if$
-	 "{" eprint "}" * * *
+   "{" eprint "}" * * *
          primaryclass empty.or.unknown
            { eprintclass empty.or.unknown
              { }
@@ -1456,11 +1456,11 @@ FUNCTION { format.pages.check.without.articleno }
     {
       pages missing$
         {
-	   numpages empty.or.unknown
-	     {""}
+     numpages empty.or.unknown
+       {""}
              { "\bibinfo{numpages}{" numpages * "}~pages" * }
-	  if$
-	}
+    if$
+  }
         { format.pages }
       if$
     }

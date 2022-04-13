@@ -8,20 +8,20 @@ Interactive in-browser visualizations comparing all reconstructed phylogenies to
 
 \subsection{Reconstruction Accuracy}
 
-Measuring tree similarity is a challenging problem, with many conflicting approaches that all provide different information \citep{smith2020treedist}. 
+Measuring tree similarity is a challenging problem, with many conflicting approaches that all provide different information \citep{smith2020treedist}.
 Ideally, we would use a metric of reconstruction accuracy that 1) is commonly used so that there exists sufficient context to understand what constitutes a good value, 2) behaves consistently across different types of trees, and 3) behaves reasonably for the types of trees common in artificial life data.
-Unfortunately, these objectives are somewhat in conflict. 
+Unfortunately, these objectives are somewhat in conflict.
 The primary source of this problem is multifurcations, nodes from which more than two lineages branch at once.
 In reconstructed phylogenies in biology, multifurcations are generally assumed to be the result of insufficient information.
 It is thought that the real phylogeny had multiple bifurcations that occurred so close together that the reconstruction algorithm is unable to separate them.
-In artificial life phylogenies, however, we have the opposite problem. 
-When we perfectly track a phylogeny, it is common for us to know that a multifurcation did in fact occur. 
+In artificial life phylogenies, however, we have the opposite problem.
+When we perfectly track a phylogeny, it is common for us to know that a multifurcation did in fact occur.
 However, it is challenging for our reconstructions to properly identify multifurcations, because it requires perfectly lining up multiple divergence times.
 Many of the most popular tree distance metrics interpret the difference between a multifurcation and a set of bifurcations as a dramatic change in topology.
 For some use cases, this change in topology may indeed be meaningful, although research on the extent of this problem is limited.
 Nevertheless, we suspect that for the majority of use cases, the tiny branch lengths between the internal nodes will make this source of error relatively minor.
 
-To overcome this obstacle, we have measured our reconstruction accuracy using multiple metrics. 
+To overcome this obstacle, we have measured our reconstruction accuracy using multiple metrics.
 We will primarily focus on Mutual Clustering Information (as implemented in the R TreeDist package) \citep{smith2020treedist}, which is a direct measure of the quantity of information in the ground truth phylogeny that was successfully captured in the reconstruction.
 It is relatively unaffected by the failure to perfectly reproduce multifurcations.
 For the purposes of easy comparison to the literature, we will also measured the Clustering Information Distance \citep{smith2020treedist}.
@@ -29,8 +29,8 @@ For the purposes of easy comparison to the literature, we will also measured the
 \input{fig/info_plot.tex}
 
 Across ground truth phylogenies, we were able to reconstruct the phylogenetic topology with between 47.75\% and 85.70\% of the information contained in the original tree using a 64-bit column memory footprint, between 47.75\% and 80.36\% using a 512-bit column memory footprint, and between 51.13\% and 83.53\% using a 4096-bit column memory footprint.
-While the Clustering Information Distance reached its maximum possible score (1) for the heavily-multifurcated ecoea phylogeny, it agreed with the Mutual Clustering Information score for less multifurcated phylogenies, such as fitness sharing. 
-Using the Recency Proportional Resolution retention policy and a 4096-bit column memory footprint, we were able to reconstruct a fitness sharing phylogeny with a Clustering Information Distance of only 0.2923471 from the ground truth. 
+While the Clustering Information Distance reached its maximum possible score (1) for the heavily-multifurcated ecoea phylogeny, it agreed with the Mutual Clustering Information score for less multifurcated phylogenies, such as fitness sharing.
+Using the Recency Proportional Resolution retention policy and a 4096-bit column memory footprint, we were able to reconstruct a fitness sharing phylogeny with a Clustering Information Distance of only 0.2923471 from the ground truth.
 For context, that result is comparable to the distance between phylogenies reconstructed from two closely-related proteins in H3N2 flu (0.25) \citep{jones2021parallel}.
 To build further intution, we strongly encourage readers to refer to our interactive web reconstruction.
 Figure \ref{fig:info_plot} summarizes error reconstructing the sharing selection phylogeny in terms of the mutual clustering information metric \citep{smith2022robust}.
