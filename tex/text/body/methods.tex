@@ -35,7 +35,7 @@ Again in accordance with the geological analogy, we refer to the chronological s
 
 \input{fig/deposit-process.tex}
 
-As currently stated, strata in eacch column will accumulate proportionally to the length of evolutionary history simulated.
+As currently stated, strata in each column will accumulate proportionally to the length of evolutionary history simulated.
 In an evolutionary run with thousands or millions of generations, this approach would soon become intractable --- particularly when columns are serialized and transmitted between distributed computing elements.
 To solve this problem, we can trade off precision for compactness by strategically deleting strata from columns as time progresses.
 Figure \ref{fig:deposit-process} overviews how stratum deposit and stratum elimination might progress over two generations under the hereditary stratigraphic column scheme.
@@ -47,11 +47,11 @@ We explore several different retention policy designs here, and implement our so
 
 Our software allows specification of a policy as either a ``predicate'' or a ``generator.''
 The predicate method requires a function that takes the generation of a stratum and the current number of strata deposited and returns whether that stratum should be retained at that point in time.
-The generator method requires a function that takes the current number of strata deposited and yields the set of generations whose should be deleted at that point in time.
+The generator method requires a function that takes the current number of strata deposited and yields the set of generations that should be deleted at that point in time.
 Although the predicate form of a policy is useful for analyzing and proving properties of policies, the generator form is generally more efficient in practice.
 We provide equivalent predicate and generator implementations for each stratum retention policy discussed here.
 
-Strata elimination causes a stratum's positionn withhin the column data structure to no longer correspond to ghe generation it was deposited.
+Strata elimination causes a stratum's position within the column data structure to no longer correspond to the generation it was deposited.
 Therefore, it may seem necessary to store the generation of deposit within the stratum data structure.
 However, for all deterministic retention policies a perfect mapping exists backwards from column index to recover generation deposited without storing it.
 We provide this formula for each stratum retention policy surveyed here.
@@ -127,7 +127,7 @@ So, when we ratchet up $g$ to $2g$ as $n$ increases, we are guaranteed that $2g$
 This principle generalizes recursively down the list.
 This is a similar principle to the approach of strictly-doubling interval sizes used in the Depth-Proportional Resolution stratum retention policies described above.
 
-This step of truncating to the nearest less than or equal to power of 2 affects our recursive step size is at mmost halved.
+This step of truncating to the nearest less than or equal to power of 2 affects our recursive step size is at most halved.
 So, because step size is a constant fraction of remaining generations $n$ (at worst $\frac{n}{2(r+1)}$), the number of steps made (and number of strata retained) scales as $O(\log(n))$ with respect to the number of strata deposited.
 Table \ref{tab:recency-proportional-space-complexity} provides exact figures for the number of strata retained under different parameterizations of the recency-proportional retention policy between one thousand and one trillion generations.
 
