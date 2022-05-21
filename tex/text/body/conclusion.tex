@@ -1,23 +1,24 @@
 \section{Conclusion} \label{sec:conclusion}
 
-To our knowledge, this work provides a novel design for digital genome components that enable phylogenetic inference on asexual populations without perfect phylogenetic tracking, which is complex and possibly cumbersome in distributed computing scenarios, especially with fallible nodes.
+To our knowledge, this work provides a novel design for digital genome components that enable phylogenetic inference on asexual populations.
+This provides a viable alternative to perfect phylogenetic tracking, which is complex and possibly cumbersome in distributed computing scenarios, especially with fallible nodes.
 Our approach enables flexible, explicit trade-offs between space complexity and inference accuracy.
 Hereditary stratigraphic columns are efficient: our approach can estimate, for example, the MRCA generation of two genomes within 10\% error with 95\% confidence up to a depth of a trillion generations with genome annotations smaller than a kilobyte.
 However, they are also powerful: we were able to achieve tree reconstructions recovering up to 85.70\% of the information contained in the original tree with only a 64-bit memory footprint.
 
 This and other methodology to enable decentralized observation and analysis of evolving systems will be essential for artificial life experiments that use distributed and best-effort computing approaches.
 Such systems will be crucial to enabling advances in the field of artificial life, particularly with respect to the question of open-ended evolution \citep{ackley2011pursue,moreno2021conduit,moreno2021case}
-Such methods will be crucial to enabling experimental analyses in distributed, best-effort systems while preserving those systems' efficiency and scalability.
+Mork work is called for to further enable experimental analyses in distributed, best-effort systems while preserving those systems' efficiency and scalability.
 As parallel and distributed computing becomes increasingly ubiquitous and begins to more widely pervade artificial life systems, hereditary stratigraphy should serve as a useful technique in this toolbox.
 
 Important work extending and analyzing hereditary stratigraphy remains to be done.
-Analyses should be performed to expound MRCA resolution guarantees of stratum retention policies when using narrow (i.e., single-bit differentia)
+Analyses should be performed to expound MRCA resolution guarantees of stratum retention policies when using narrow (i.e., single-bit) differentia.
 Constant-size-complexity stratum retention policies that preferentially retain a denser sampling of more-recent strata should be developed and analyzed.
 Extensions to sexual populations should be explored, including the possibility of annotating and tracking individual genome components instead of whole-genome individuals.
-An alternate approach might be to define a preferential inheritance rule so that at each column generation slot, a single differentia sweeps over an entire interbreeding population.
+An alternate approach might be to define a preferential inheritance rule so that at each generation slot within a column, a single differentia sweeps over an entire interbreeding population.
 Optimization of tree reconstruction from extant hereditary stratigraphs remains an open question, too, particularly with regard to properly handling multifurcations.
 It would be particularly valuable to develop methodology to annotate inner nodes of trees reconstructed from hereditary stratigraphs with confidence levels.
 
 The problem of designing genomes to maximize phylogenetic reconstructability raises unique questions about phylogenetic estimation.
 Such a backward problem --- optimizing genomes to make analyses trivial as opposed to the usual process of optimizing analyses to genomes --- puts questions about the genetic information analyses operate on in a new light.
-In particular, it would be valuable to derive upper bounds on phylogenetic inference accuracy given genome size and generations elapsed.
+In particular, it would be interesting to derive upper bounds on phylogenetic inference accuracy given genome size and generations elapsed.
