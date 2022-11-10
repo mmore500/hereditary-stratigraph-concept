@@ -60,7 +60,7 @@ Finally, for each policy we provide a formula to calculate the exact number of s
 The next subsections introduce several stratum retention policies, explain the intuition behind their implementation, and elaborate their space complexity and resolution properties.
 For each policy, patterns of stratum retention are illustrated in Figure \ref{fig:retention-policies}.
 The formulas for number of strata retained after $n$ generations, the formulas to calculate stratum deposit generation from column index, and the retention predicate specifications of each policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateDepthProportionalResolution}.
-The generator specification of each policy is available in Supplementary Listing \ref{lst:StratumRetentionCondemnerDepthProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
+The generator specification of each policy is available in Supplementary Listing \ref{lst:StratumRetentionCondemnerDepthProportionalResolution}.
 For tapered depth-proportional resolution and recency-proportional resolution, the accuracy of MRCA estimation can also be explored via an interactive in-browser web applet at \url{https://hopth.ru/bi}.
 
 \input{fig/retention-policies.tex}
@@ -192,7 +192,7 @@ In order to ensure coverage of a variety of phylogenetic conditions, we sampled 
 \end{itemize}
 
 Supplementary Table \ref{tab:ground-truth-phylogenies} provides full details on the conditions each ground truth phylogeny was drawn from.
-The phylogenies themselves are available with our supplementary material \citep{moreno2022hstratconceptsupplement}.
+The phylogenies themselves are available with our supplementary material.
 
 For each ground truth phylogeny, we tested combinations of three configuration parameters:
 \begin{itemize}
@@ -203,7 +203,7 @@ For each ground truth phylogeny, we tested combinations of three configuration p
 
 Stratum retention policies were parameterized so that the maximum number of strata possible were present at the end of the experiment without exceeding the target memory footprint.
 If the target memory footprint is exceeded by the sparsest possible parameterization of a retention policy, then that sparsest possible parameterization was used.
-Supplementary Tables \cref{tab:experiment-column-sizes-nk-ecoea-selection,tab:experiment-column-sizes-nk-lexicase-selection,tab:experiment-column-sizes-nk-random-selection,tab:experiment-column-sizes-nk-sharing-selection,tab:experiment-column-sizes-nk-tournament-selection} provide the calculated paramaterizations and memory footprints of extant columns \citep{moreno2022hstratconceptsupplement}.
+Supplementary Tables \cref{tab:experiment-column-sizes-nk-ecoea-selection,tab:experiment-column-sizes-nk-lexicase-selection,tab:experiment-column-sizes-nk-random-selection,tab:experiment-column-sizes-nk-sharing-selection,tab:experiment-column-sizes-nk-tournament-selection} provide the calculated paramaterizations and memory footprints of extant columns.
 
 \input{fig/phylogenetic-inference.tex}
 
