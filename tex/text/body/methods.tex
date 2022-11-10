@@ -59,7 +59,7 @@ Finally, for each policy we provide a formula to calculate the exact number of s
 
 The next subsections introduce several stratum retention policies, explain the intuition behind their implementation, and elaborate their space complexity and resolution properties.
 For each policy, patterns of stratum retention are illustrated in Figure \ref{fig:retention-policies}.
-The formulas for number of strata retained after $n$ generations, the formulas to calculate stratum deposit generation from column index, and the retention predicate specifications of each policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateDepthProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
+The formulas for number of strata retained after $n$ generations, the formulas to calculate stratum deposit generation from column index, and the retention predicate specifications of each policy are available in Supplementary Listing \ref{lst:StratumRetentionPredicateDepthProportionalResolution}.
 The generator specification of each policy is available in Supplementary Listing \ref{lst:StratumRetentionCondemnerDepthProportionalResolution} \citep{moreno2022hstratconceptsupplement}.
 For tapered depth-proportional resolution and recency-proportional resolution, the accuracy of MRCA estimation can also be explored via an interactive in-browser web applet at \url{https://hopth.ru/bi}.
 
@@ -208,7 +208,7 @@ Supplementary Tables \cref{tab:experiment-column-sizes-nk-ecoea-selection,tab:ex
 In order to assess the viability of phylogenetic inference using hereditary stratigraphic columns from extant organisms, we used the end-state stratigraphs to reconstruct an estimate of the actual ground truth phylogenetic histories.
 The first step to reconstructing a phylogenetic tree for the history of an extant population at the end of an experiment is to construct a distance matrix by calculating all pairwise phylogenetic distances between extant columns.
 We defined phylogenetic distance between two extant columns as the sum of each extant organism's generational distance back to the generation of their MRCA, estimated as the mean of the upper and lower 95\% confidence bounds.
-Supplementary Figure \ref{fig:phylogenetic-inference} provides a cartoon summary of the process of calculating phylogenetic distance between two extant columns \citep{moreno2022hstratconceptsupplement}.
+Supplementary Figure \ref{fig:phylogenetic-inference} provides a cartoon summary of the process of calculating phylogenetic distance between two extant columns.
 
 We then used the unweighted pair group method with arithmetic mean (UPGMA) reconstruction tool provided by the BioPython package to generate estimate phylogenetic trees \citep{cock2009biopython,sokal1958statistical}.
 After generating the reconstructed tree topology, we performed a second pass to adjust branch lengths so that each internal tree node sat at the mean of its estimated 95\% confidence generation bounds.
