@@ -205,10 +205,12 @@ Stratum retention policies were parameterized so that the maximum number of stra
 If the target memory footprint is exceeded by the sparsest possible parameterization of a retention policy, then that sparsest possible parameterization was used.
 Supplementary Tables \cref{tab:experiment-column-sizes-nk-ecoea-selection,tab:experiment-column-sizes-nk-lexicase-selection,tab:experiment-column-sizes-nk-random-selection,tab:experiment-column-sizes-nk-sharing-selection,tab:experiment-column-sizes-nk-tournament-selection} provide the calculated paramaterizations and memory footprints of extant columns \citep{moreno2022hstratconceptsupplement}.
 
+\input{fig/phylogenetic-inference.tex}
+
 In order to assess the viability of phylogenetic inference using hereditary stratigraphic columns from extant organisms, we used the end-state stratigraphs to reconstruct an estimate of the actual ground truth phylogenetic histories.
 The first step to reconstructing a phylogenetic tree for the history of an extant population at the end of an experiment is to construct a distance matrix by calculating all pairwise phylogenetic distances between extant columns.
 We defined phylogenetic distance between two extant columns as the sum of each extant organism's generational distance back to the generation of their MRCA, estimated as the mean of the upper and lower 95\% confidence bounds.
-Supplementary Figure \ref{fig:phylogenetic-inference} provides a cartoon summary of the process of calculating phylogenetic distance between two extant columns.
+Figure \ref{fig:phylogenetic-inference} provides a cartoon summary of the process of calculating phylogenetic distance between two extant columns.
 
 We then used the unweighted pair group method with arithmetic mean (UPGMA) reconstruction tool provided by the BioPython package to generate estimate phylogenetic trees \citep{cock2009biopython,sokal1958statistical}.
 After generating the reconstructed tree topology, we performed a second pass to adjust branch lengths so that each internal tree node sat at the mean of its estimated 95\% confidence generation bounds.
