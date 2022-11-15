@@ -1,3 +1,8 @@
+% \input{lib/importpath.tex}
+\makeatletter
+  \def\importpathx{\import@path}
+\makeatother
+
 \begin{table}
 
 \begin{tabularx}{\columnwidth}{X | X | X | X | X | X}%
@@ -60,7 +65,7 @@
     filter expr={
           test{\ifnumgreater{\thecsvinputline}{2}}
     }
-  ]{submodules/hereditary-stratigraph-concept/binder/phylogenetic-inference/\fulldataname }{}% use head of csv as column names
+  ]{\importpathx submodules/hereditary-stratigraph-concept/binder/phylogenetic-inference/\fulldataname }{}% use head of csv as column names
 {
   \csvcolix
   & \num[round-precision=1,round-mode=places]{\csvcolii}
