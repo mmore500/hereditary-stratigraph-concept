@@ -1,5 +1,10 @@
 \input{lib/C.tex}
+% \input{lib/importpath.tex}
+\makeatletter
+  \def\importpathx{\import@path}
+\makeatother
 
+\begin{table}
 \csvreader[
   longtable=C{3cm}cccccc,
   table head=\caption{
@@ -10,9 +15,7 @@
     \toprule \thead{Tree Comparison Metric} & \thead{Selection\\ Scheme} & \thead{Stratum\\ Retention\\ Policy} & \thead{Target\\ Num\\ Column\\ Bits} & \thead{1 \\Differentia \\ Bit\\ Score} & \thead{8 \\Differentia \\ Bits\\ Score} & \thead{64 \\Differentia \\ Bits\\ Score} \\ \midrule\endhead
     \bottomrule\endfoot,
   late after line=\\,
-]{%
-submodules/hereditary-stratigraph-concept/binder/reconstruction-quality/outplots/reconstruction_quality_results_by_differentia_bits.csv%
-}{}{%
-\vcell{\csvcoli} & \vcell{\csvcolii} & \vcell{\csvcoliii} & \vcell{\csvcoliv} & \vcell{\csvcolv} & \vcell{\csvcolvi} & \vcell{\csvcolvii} \\[-\rowheight]
-\printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle \\
-}
+]{\importpathx submodules/hereditary-stratigraph-concept-binder/binder/reconstruction-quality/outplots/reconstruction_quality_results_by_differentia_bits.csv}{}
+{\vcell{\csvcoli} & \vcell{\csvcolii} & \vcell{\csvcoliii} & \vcell{\csvcoliv} & \vcell{\csvcolv} & \vcell{\csvcolvi} & \vcell{\csvcolvii} \\[-\rowheight]
+\printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle \\}
+\end{table}
