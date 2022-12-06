@@ -185,12 +185,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-      - run: make -C /opt/hereditary-stratigraph-concept/tex
+      - run: make -C tex
       - name: Upload output as artifact
         uses: actions/upload-artifact@v2
         with:
           name: manuscript
-          path: /opt/hereditary-stratigraph-concept/tex/hereditary-stratigraph-concept-draft.pdf
+          path: tex/hereditary-stratigraph-concept-draft.pdf
 
   latex-extended-abstract:
     name: Latex Extended Abstract Build
@@ -205,12 +205,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-      - run: make -C /opt/hereditary-stratigraph-concept/tex-extended-abstract
+      - run: make -C tex-extended-abstract
       - name: Upload output as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: manuscript
-          path: /opt/hereditary-stratigraph-concept/tex/hereditary-stratigraph-concept-draft.pdf
+          name: manuscript-abstract
+          path: tex-extended-abstract/hereditary-stratigraph-concept-draft.pdf
 
   deploy-pages:
     name: Deploy to GitHub Pages
