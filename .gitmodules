@@ -3,7 +3,7 @@
   url = https://github.com/mmore500/dishtiny.git
   shallow = true
 [submodule "tex/submodules/hereditary-stratigraph-concept"]
-  path = tex/submodules/hereditary-stratigraph-concept
+	path = tex/submodules/hereditary-stratigraph-concept-binder
   url = https://github.com/mmore500/hereditary-stratigraph-concept.git
   branch = binder
   shallow = true
