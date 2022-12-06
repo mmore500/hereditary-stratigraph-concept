@@ -8,7 +8,7 @@ Interactive in-browser visualizations comparing all reconstructed phylogenies to
 
 \subsection{Reconstruction Accuracy}
 
-Measuring tree similarity is a challenging problem, with many conflicting approaches that all provide different information \citep{smith2020treedist}.
+Measuring tree similarity is a challenging problem, with many conflicting approaches that all provide different information \citep{smith2020information}.
 Ideally, we would use a metric of reconstruction accuracy that 1) is commonly used so that there exists sufficient context to understand what constitutes a good value, 2) behaves consistently across different types of trees, and 3) behaves reasonably for the types of trees common in artificial life data.
 Unfortunately, these objectives are somewhat in conflict.
 The primary source of this problem is multifurcations, nodes from which more than two lineages branch at once.
@@ -42,7 +42,8 @@ As expected, we did observe overall more accurate reconstructions from columns t
 
 Among the surveyed ground truth phylogenies and target column footprints, we consistently found that smaller differentia were able to yield more or as accurate phylogenetic reconstructions.
 The stronger performance of narrow differentia was particularly apparent in low-memory-footprint scenarios where overall phylogenetic inference power was weaker.
-Overall, single-bit differentia outperformed 64-bit differentia under 20 conditions, and were indistinguishable under 7 conditions, and were worse under 3 conditions.
+Overall, single-bit differentia outperformed 64-bit differentia under 20 conditions, and were indistinguishable under 6 conditions, and were worse under 4 conditions.
+We used Cluster Information Distance to perform these comparisons.
 Full results are available in Supplementary Section \ref{sec:differentia-size-full}.
 Although narrower differentia have less distinguishing power on their own, their smaller size allows more to be packed into the memory footprint to cover more generations, which seems to help reconstruction power.
 We must note that narrower differentia can pack more thoroughly into the footprint caps we imposed on column size, so their extant columns tended to have slightly more overall bits.
@@ -51,8 +52,9 @@ However, this was a small enough imbalance (in most cases $<10\%$) that we belie
 \subsection{Retention Policy}
 
 Across the surveyed ground truth phylogenies and target column memory footprints, we found that the recency-proportional resolution stratum retention policy generally yielded better phylogenetic reconstructions.
-Phylogenetic reconstruction quality was better in 28 conditions, equivalent in 14 conditions, and worse in 3 conditions.
+Phylogenetic reconstruction quality was better in 28 conditions, equivalent in 13 conditions, and worse in 4 conditions.
 Again, this effect was most apparent in the small-stratum-count scenarios where overall inference power was weaker.
+We used Cluster Information Distance to perform these comparisons.
 Full results are available in Supplementary Section \ref{sec:retention-policy-full}.
 The stronger performance of recency-proportional resolution is likely due to the denser retention of recent strata under the recency-proportional metric, which help to resolve the more numerous (and therefore typically more tightly spaced) phylogenetic events in the near past \citep{zhaxybayeva2004cladogenesis}.
 Recency-proportional resolution tended to be able to fit fewer strata within the prescribed memory footprints (except in cases where it could not fit within the footprint) so its stronger performance cannot be attributed to more retained bits in the end-state extant columns.
