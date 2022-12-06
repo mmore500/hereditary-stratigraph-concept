@@ -68,7 +68,7 @@ for notebook in "${script_dir}/"*.ipynb; do
     } \
     for cell in notebook['cells'] \
   ]; \
-  notebook['metadata'] = {}; \
+  notebook['metadata'] = {'kernelspec' : notebook['metadata']['kernelspec']}; \
   fp = open('${notebook}', 'w'); \
   json.dump( \
     notebook, \
