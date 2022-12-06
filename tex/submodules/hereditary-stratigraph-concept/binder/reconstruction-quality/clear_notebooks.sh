@@ -1,1 +1,1 @@
-../execute_notebooks.sh
+../clear_notebooks.sh

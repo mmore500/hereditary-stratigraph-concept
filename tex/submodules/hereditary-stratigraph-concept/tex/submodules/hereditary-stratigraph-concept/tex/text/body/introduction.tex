@@ -1,3 +1,56 @@
 \section{Introduction} \label{sec:introduction}
 
-example \citep{gagliardi2019international}
+In traditional serially-processed digital evolution experiments, phylogenetic trees can be tracked perfectly as they progress \citep{bohm2017mabe,wang2018vine,lalejini2019data} rather than reconstructed afterward, as must be done in most biological studies of evolution.
+Such direct phylogenetic tracking enables experimental possibilities unique to digital evolution, such as perfect reconstruction of the sequence of phylogenetic states that led to a particular evolutionary outcome \citep{lenski2003evolutionary, dolson2020interpreting}.
+In a shared-memory context, it is not difficult to maintain a complete phylogeny by ensuring that offspring retain a permanent reference to their parent (or vice versa).
+As simulations progress, however, memory usage would balloon if all simulated organisms were stored permanently.
+Garbage collecting extinct lineages and saving older history to disk greatly ameliorates this issue \citep{bohm2017mabe,dolson2019modes}.
+
+If sufficient memory or disk space can be afforded to log all reproduction events, recording a perfect phylogeny in a distributed context is also not especially difficult.
+Processes could maintain records of each reproduction event, storing the parent organism (and its associated process) with all generated offspring (and their destination processes).
+As long organisms are uniquely identified globally, these ``dangling ends'' could be joined in postprocessing to weave a continuous global phylogeny.
+Of course, for the huge population sizes made possible by distributed systems, such stitching may become a demanding task in and of itself.
+Additionally, even small amounts of lost or corrupted data could fundamentaly degrade tracking by disjoining large tree subsections.
+
+However, if memory and disk space are limited, distributed phylogeny tracking becomes a more burdonsome challenge.
+A naive approach might employ a server model to maintain a central store of phylogenetic data.
+Processes would dispatch notifications of birth and death events to the server, which would curate (and gabage collect) phylogenetic history much the same as current serial phylogenetic tracking implementations.
+Unfortunately, this server model approach would present scalability challenges: burden on the server process would worsen in direct proportion to processor count.
+% ELD: This is making me wonder if there's a middle ground that could be explored in the future where we could use a sort of UDP phylogeny protocol, where no confirmation occurs
+This approach would also be similarly brittle to any lost or corrupted data.
+
+A more scalable approach might record birth and death events only on the process(es) where they unfold.
+However, lineages that went extinct locally could not be safely garbage collected until the extinction of their offspring's lineages on other processors could be confirmed.
+Garbage collection would thus require extinction notifications to wind back across processes each lineage had traversed.
+Again, this approach would also be brittle to loss or corruption of data.
+
+% Under a best-effort model, no system of phylogeny tracking can guarantee proper garbage collection.
+% For example, it would be possible for an offspring that was dispatched to a neighboring process to have failed to arrive, and both processes would need to keep going, despite the failure.
+% So, extinction notifications for the lineage founded by that offspring would never be dispatched --- putting in motion a memory leak of un-garbage-collectible phylogenetic history.
+% The situation becomes even more leaky when the possibility of extinction notifications themselves being lost.
+
+In a distributed context --- especially, a distributed, best-effort context --- phylogenetic reconstruction (as opposed to tracking) could prove simpler to implement, more efficient at runtime, and more robust to data loss while providing sufficient information to address experimental questions of interest.
+However, phylogenetic reconstruction from genomes with a traditional model of divergence under grandual accumulation of random mutations poses its own difficulties, including
+\begin{itemize}
+\item accounting for heterogeneity in evolutionary rates (i.e., the rate at which mutations accumulate due to divergent mutation rates or selection pressures) between lineages \citep{lack2010identifying},
+\item performing sequence alignment \citep{casci2008lining},
+\item mutational saturation \citep{hagstrom2004using},
+\item appropriately selecting and applying complex reconstruction algorithms \citep{kapli2020phylogenetic}, and
+\item computational intensity \citep{sarkar2010hardware}.
+\end{itemize}
+
+The computational flexibility of digital artificial life experiments provides a unique opportunity to ovecome these challenges: designing heritable genome annotations specifically to ensure simple, efficient, and effective phylogenetic reconstruction.
+For maximum applicability of such a solution, these annotations should be phenotypically neutral heritable instrumentation \citep{stanley2002evolving} that can be applied to any digital genome.
+
+In this paper, we present ``hereditary stratigraphy,'' a novel heritable genome annotation system to facilitate post-hoc phylogenetic inference on asexual populations.
+This system allows explicit control over trade-offs between space complexity and accuracy of phylogenetic inference.
+Instead of modeling genome components diverging through a neutral mutational process, we keep a record of historical checkpoints that allow comparison of two lineages to identify the range of time in which they diverged.
+Careful management of these checkpoints allows for a variety of trade-off options, including:
+\begin{itemize}
+  \item linear space complexity and fixed-magnitude inference error,
+  \item constant space complexity and inference error linearly proportional to phylogenetic depth, and
+  \item logarithmic space complexity and inference error linearly proportional to time elapsed since MRCA (which we suspect will be the most broadly useful trade-off).
+\end{itemize}
+
+In Methods we motivate and explain the hereditary stratigraphy approach.
+Then, in Results and Discussion we simulate post-hoc inference on known phylogenies to assess the quality of phylogenetic reconstruction enabled by the hereditary stratigraphy method.

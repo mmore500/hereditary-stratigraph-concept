@@ -36,7 +36,7 @@ for notebook in "${script_dir}/"*.ipynb; do
     --inplace \
     "${notebook}"
   # remove empty cells
-  nb-clean clean  --remove-empty-cells "${notebook}"
+  nb-clean clean --preserve-cell-metadata tags --remove-empty-cells "${notebook}"
   # strip trailing whitespace
   sed -i 's/\s*\\n",$/\\n",/g' "${notebook}"
   sed -i 's/\s*"$/"/g' "${notebook}"
@@ -68,6 +68,7 @@ for notebook in "${script_dir}/"*.ipynb; do
     } \
     for cell in notebook['cells'] \
   ]; \
+  notebook['metadata'] = {'kernelspec' : notebook['metadata']['kernelspec']}; \
   fp = open('${notebook}', 'w'); \
   json.dump( \
     notebook, \
