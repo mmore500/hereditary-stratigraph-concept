@@ -27,8 +27,6 @@ echo "clear notebooks in current directory"
 echo "--------------------------------------"
 ################################################################################
 
-nbdev_clean --clear_all --fname .
-
 shopt -s nullglob
 
 for notebook in "${script_dir}/"*.ipynb; do
