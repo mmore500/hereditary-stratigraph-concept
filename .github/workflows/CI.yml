@@ -193,7 +193,7 @@ jobs:
           path: /opt/hereditary-stratigraph-concept/tex/hereditary-stratigraph-concept-draft.pdf
 
   latex-extended-abstract:
-    name: Latex Extended Abstracit Build
+    name: Latex Extended Abstract Build
     runs-on: ubuntu-20.04
     needs:
       - docker-teximage-build
