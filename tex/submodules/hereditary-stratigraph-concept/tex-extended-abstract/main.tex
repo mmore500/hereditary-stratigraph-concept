@@ -1,0 +1,35 @@
+\documentclass[sigconf]{acmart}
+
+\setcopyright{acmcopyright}
+\copyrightyear{2022}
+\acmYear{2022}
+\setcopyright{rightsretained}
+\acmConference[GECCO '22 Companion]{Genetic and Evolutionary Computation Conference Companion}{July 9--13, 2022}{Boston, MA, USA}
+\acmBooktitle{Genetic and Evolutionary Computation Conference Companion (GECCO '22 Companion), July 9--13, 2022, Boston, MA, USA}
+\acmDOI{10.1145/3520304.3533937}
+\acmISBN{978-1-4503-9268-6/22/07}
+
+\input{lib/dependencies.tex}
+\input{lib/pragmaonce.tex}
+
+\ifdefined\mydraft
+\mydraft
+\fi
+
+\defaultbibliography{bibl}
+\defaultbibliographystyle{apalike}
+\begin{document}
+
+\input{text/frontmatter.tex}
+
+\begin{bibunit}
+
+\input{text/body.tex}
+
+\input{text/acknowledgement.tex}
+
+\input{text/references.tex}
+
+\end{bibunit}
+
+\end{document}

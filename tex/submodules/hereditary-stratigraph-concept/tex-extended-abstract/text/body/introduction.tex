@@ -1,0 +1,41 @@
+\section{Introduction} \label{sec:introduction}
+
+In non-parallelized digital evolution experiments, phylogenetic trees can be tracked perfectly as they progress \citep{bohm2017mabe,wang2018vine,lalejini2019data} rather than reconstructed afterward, as must be done in most biological studies of evolution.
+Such direct phylogenetic tracking enables a dizzying suite of experimental possibilities unique to digital evolution, such as perfect reconstruction of the sequence of phylogenetic states that led to a particular evolutionary outcome \citep{lenski2003evolutionary, dolson2020interpreting}.
+% In a shared-memory context, it is not difficult to maintain a complete phylogeny where offspring simply track their parent (or vice versa).
+% As simulations progress for longer durations, memory usage will typically grow at least linearly if population sizes are fixed, or worse if populations are growing or organisms are becoming more complex.
+% These problems are easily ameliorated, however, by performing garbage collection on extinct lineages and saving older history to disk \citep{bohm2017mabe,dolson2019modes}.
+
+Phylogenetic tracking in a distributed context, where linages may traverse many machines, introduces implementation complexity and more significant runtime overhead cost.
+% However, if sufficient memory or disk space can be afforded to log all reproduction events, recording a perfect phylogeny in a distributed context is still not especially difficult.
+% Processes could maintain records of each reproduction event, storing the parent organism (and its associated process) with all generated offspring (and their destination processes).
+% As long as no data goes missing and organisms are uniquely identified globally, these ``dangling ends'' could be joined in postprocessing to weave a continuous global phylogeny.
+% Of course, for the huge population sizes made possible by distirbuted systems, such stitching may become a demanding task in and of itself.
+%
+% However, if memory and disk space are limited, distributed phylogeny tracking becomes a more burdonsome challenge.
+% A naive approach might employ a server model to maintain a central store of phylogenetic data.
+% Processes would dispatch notifications of birth and death events to the server, which would curate (and gabage collect) phylogenetic history much the same as current serial phylogenetic tracking implementations.
+% Unfortunately, this server model approach would present profound scalability challenges: communication and computation burden on the server process would worsen in direct proportion to processor count, and processes would frequently need to pause while waiting for confirmation that a reproduction event was successfully reported.
+% ELD: This is making me wonder if there's a middle ground that could be explored in the future where we could use a sort of UDP phylogeny protocol, where no confirmation occurs
+An ideally scalable approach would record birth and death events only on the process(es) where they unfold.
+% Even this localized technique would lead to serious performance challenges, however.
+% Lineages that went extinct locally could not be safely garbage collected until the extinction of thair offspring's lineages on other processors could be confirmed.
+% Thus, garbage collection would require extinction notifications to wind back across processes each lineage had traversed.
+
+% Under a best-effort model, no system of phylogeny tracking can guarantee proper garbage collection.
+% For example, it would be possible for an offspring that was dispatched to a neighboring process to have failed to arrive, and both processes would need to keep going, despite the failure.
+% So, extinction notifications for the lineage founded by that offspring would never be dispatched --- putting in motion a memory leak of un-garbage-collectible phylogenetic history.
+% The situation becomes even more leaky when the possibility of extinction notifications themselves being lost.
+
+In a distributed context --- especially, a distributed, best-effort context --- phylogenetic reconstruction (as opposed to tracking) could prove simpler and more efficient at runtime while providing sufficient power to address experimental questions of interest.
+However, phylogenetic reconstruction from genomes with a traditional model of divergence under grandual accumulation of random mutations poses its own difficulties \citep{lack2010identifying,casci2008lining,hagstrom2004using,kapli2020phylogenetic,sarkar2010hardware}.
+
+% The computational flexibility of digital evolution experiments provides a unique opportunity to overcome these challenges: designing heritable genome annotations specifically to simplify and strengthen phylogenetic reconstruction efforts.
+% For maximum applicability of such a solution, these annotations should be phenotypically neutral heritable instrumentation \citep{stanley2002evolving} that do not affect any encodings for functional genome content.
+
+This work introduces ``hereditary stratigraphy,'' a novel heritable genome annotation system to facilitate post-hoc phylogenetic inference on asexual populations.
+This system allows explicit control over trade-offs between space complexity and accuracy of phylogenetic inference.
+Instead of modeling genome components undergoing neutral variation through a mutational process, we keep a record of historical checkpoints that allow comparison of two lineages to identify the range of time in which they diverged.
+
+% In Section \ref{sec:methods} we motivate and explain the hereditary stratigraphy approach.
+% Then, in Section \ref{sec:results} we simulate post-hoc inference on known phylogenies to assess the quality of phylogenetic reconstruction enabled by the hereditary stratigraphy method.

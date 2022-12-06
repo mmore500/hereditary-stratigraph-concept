@@ -9,12 +9,14 @@
 
 \defaultbibliography{bibl}
 \defaultbibliographystyle{apalike}
-
+\usepackage[moderate]{savetrees}
 \begin{document}
 
 \input{text/frontmatter.tex}
 
 \begin{bibunit}
+
+\input{text/abstract.tex}
 
 \input{text/body.tex}
 
@@ -28,6 +30,7 @@
 \newpage
 
 \begin{bibunit}
+\setcounter{secnumdepth}{3}
 
 \input{text/supplement.tex}
 

@@ -4,7 +4,7 @@ set -e
 # enforce use of GNU version of coreutils
 . ./tidy/util/enforce_gnu_utils.sh
 
-TARGETS=$(find . -type f \( -name "*.py" -o -name "*.ipynb" \) ! -path "./cpp/third-party/*")
+TARGETS=$(find . -type f \( -name "*.py" -o -name "*.ipynb" \) ! -path "./cpp/third-party/*" ! -path "./tex/submodules/*")
 
 for filename in ${TARGETS}
 do

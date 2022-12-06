@@ -1,0 +1,18 @@
+\input{lib/C.tex}
+
+\csvreader[
+  longtable=C{3cm}cccccc,
+  table head=\caption{
+    Comparison of phylogenetic reconstruction quality across differentia bit counts.
+    Reconstruction quality measured as clustering information distance (lower is better), mutual clustering information (higher is better), and generalized Robinson-Foulds similarity (higher is better) between reconstructed phylogeny and ground truth phylogeny \citep{smith2020information, smith2020treedist}.
+    RPR is recency-proportional resolution stratum retention policy and TDPR is tapered depth-proportional resolution stratum retention policy.
+  }\label{tab:reconstruction-quality-results-by-differentia-bits} \\
+    \toprule \thead{Tree Comparison Metric} & \thead{Selection\\ Scheme} & \thead{Stratum\\ Retention\\ Policy} & \thead{Target\\ Num\\ Column\\ Bits} & \thead{1 \\Differentia \\ Bit\\ Score} & \thead{8 \\Differentia \\ Bits\\ Score} & \thead{64 \\Differentia \\ Bits\\ Score} \\ \midrule\endhead
+    \bottomrule\endfoot,
+  late after line=\\,
+]{%
+submodules/hereditary-stratigraph-concept/binder/reconstruction-quality/outplots/reconstruction_quality_results_by_differentia_bits.csv%
+}{}{%
+\vcell{\csvcoli} & \vcell{\csvcolii} & \vcell{\csvcoliii} & \vcell{\csvcoliv} & \vcell{\csvcolv} & \vcell{\csvcolvi} & \vcell{\csvcolvii} \\[-\rowheight]
+\printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle \\
+}

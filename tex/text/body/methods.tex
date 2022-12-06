@@ -86,7 +86,7 @@ See second from top panel of Figure \ref{fig:retention-policies}.
 
 When comparing stratigraphic columns from different generations, the resolution guarantee holds in terms of the number of generations experienced by the older of the two columns.
 Because this retention policy is deterministic, for two columns with the same policy, every stratum that is held by the older column is also guaranteed to be present in the younger column (unless it hasn't yet been deposited on the younger column).
-Therefore, the strata that would enable the desired resolution when comparing two columns of the same age are guaranteed to be available, even when one colummn has elapsed more generations.
+Therefore, the strata that would enable the desired resolution when comparing two columns of the same age are guaranteed to be available, even when one column has elapsed more generations.
 
 Because the number of strata retained under this policy is bounded as $2r+1$, space complexity scales as $O(1)$ with respect to the number of strata deposited.
 It follows that the MRCA generation estimate uncertainty scales as $O(n)$ with respect to the number of strata deposited.
@@ -99,7 +99,7 @@ The tapered depth-proportional resolution policy functions identically to the de
 See third from top panel of Figure \ref{fig:retention-policies}.
 
 The column footprint stability of this variation makes it easier to parameterize our experiments to ensure comparable end-state column footprints for fair comparison between retention policies, in addition to making this policy likely better suited to most use cases.
-By design, this policy has the same space complexity and MRCA estimation uncertainty scaling relationships with number generations elapsed as the naive depth-proporitonal resolution policy.
+By design, this policy has the same space complexity and MRCA estimation uncertainty scaling relationships with number generations elapsed as the naive depth-proportional resolution policy.
 
 \subsection{MRCA-Recency-Proportional Resolution Stratum Retention Policy}
 

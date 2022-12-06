@@ -1,0 +1,50 @@
+\input{lib/importpath.tex}
+
+\begin{figure*}%
+%-------------------------------------------------------------------------------
+  \begin{subfigure}[b]{0.33\linewidth}
+    \centering
+    % pass an arbitrary filename, potentially with unsafe characters
+    % adapted from https://tex.stackexchange.com/a/36178
+    \catcode`\%=12
+    \providecommand\filename{}
+    \renewcommand\filename{\detokenize{submodules/hereditary-stratigraph-concept/binder/phylogenetic-inference/teeplots/a=true_phylogeny+source=a%reconstructed_phylogenies~source%nk_lexicaseselection_seed110_pop165_mut.01_snapshot_500.csv.gz+viz=draw+ext=}}
+    \catcode`\%=14
+    \includegraphics[width=\linewidth]{\importpath\filename}
+    \caption{Ground truth phylogeny.}
+    \label{fig:reconstruction-example-true-phylogeny}
+  \end{subfigure}%
+%-------------------------------------------------------------------------------
+  \begin{subfigure}[b]{0.33\linewidth}
+    \centering
+    % pass an arbitrary filename, potentially with unsafe characters
+    % adapted from https://tex.stackexchange.com/a/36178
+    \catcode`\%=12
+    \providecommand\filename{}
+    \renewcommand\filename{\detokenize{submodules/hereditary-stratigraph-concept/binder/phylogenetic-inference/teeplots/source=a%reconstructed_phylogenies~source%nk_lexicaseselection_seed110_pop165_mut.01_snapshot_500.csv.gz+treatment=differentia%1~policy%TaperedDepthProportionalResolution~target%64+viz=draw-biopython-tree-with-origin-time-bounds+ext=}}
+    \catcode`\%=14
+    \includegraphics[width=\linewidth]{\importpath\filename}
+    \caption{1-bit Fingerprint Differentia, Tapered Depth-Proportional Resolution Stratum Retention Predicate, 64 bit target column footprint.}
+    \label{fig:reconstruction-example-d1-rp-t64}
+  \end{subfigure}%
+%-------------------------------------------------------------------------------
+  \begin{subfigure}[b]{0.33\linewidth}
+    \centering
+    % pass an arbitrary filename, potentially with unsafe characters
+    % adapted from https://tex.stackexchange.com/a/36178
+    \catcode`\%=12
+    \providecommand\filename{}
+    \renewcommand\filename{\detokenize{submodules/hereditary-stratigraph-concept/binder/phylogenetic-inference/teeplots/source=a%reconstructed_phylogenies~source%nk_lexicaseselection_seed110_pop165_mut.01_snapshot_500.csv.gz+treatment=differentia%1~policy%RecencyProportionalResolution~target%64+viz=draw-biopython-tree-with-origin-time-bounds+ext=}}
+    \catcode`\%=14
+    \includegraphics[width=\textwidth]{\importpath\filename}
+    \caption{1-bit Fingerprint Differentia, MRCA-Recency-Proportional Resolution Stratum Retention Predicate, 64 bit target column footprint.}
+    \label{fig:reconstruction-example-d1-tdp-t64}
+  \end{subfigure}
+%-------------------------------------------------------------------------------
+  \caption{
+    Example phylogeny reconstructions of ground-truth lexicase selection phylogeny from inference on extant hereditary stratigraphic columns.
+    Shaded error bars on reconstructions indicate 95\% confidence intervals for the true generation of tree nodes.
+    Arbitrary color is added to enhance distinguishability.
+  }
+  \label{fig:reconstruction-example}
+\end{figure*}
