@@ -4,7 +4,6 @@
   \def\importpathx{\import@path}
 \makeatother
 
-\begin{table}
 \csvreader[
   longtable=C{3cm}cccccc,
   table head=\caption{
@@ -18,4 +17,3 @@
 ]{\importpathx submodules/hereditary-stratigraph-concept-binder/binder/reconstruction-quality/outplots/reconstruction_quality_results_by_differentia_bits.csv}{}
 {\vcell{\csvcoli} & \vcell{\csvcolii} & \vcell{\csvcoliii} & \vcell{\csvcoliv} & \vcell{\csvcolv} & \vcell{\csvcolvi} & \vcell{\csvcolvii} \\[-\rowheight]
 \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle & \printcellmiddle \\}
-\end{table}
