@@ -1,10 +1,12 @@
 \input{lib/C.tex}
+\input{lib/dissertationonly.tex}
 % \input{lib/importpath.tex}
 \makeatletter
   \def\importpathx{\import@path}
 \makeatother
 
 \begin{singlespacing}
+\dissertationonly{\scriptsize}
 \csvreader[
   longtable=C{3cm}cccccc,
   table head=\caption{
