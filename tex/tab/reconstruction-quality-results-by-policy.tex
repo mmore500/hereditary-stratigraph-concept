@@ -3,6 +3,7 @@
   \def\importpathx{\import@path}
 \makeatother
 
+\begin{singlespacing}
 \csvreader[
   longtable=cccccc,
   table head=\caption{
@@ -15,3 +16,4 @@
   late after line=\\,
 ]{\importpathx submodules/hereditary-stratigraph-concept-binder/binder/reconstruction-quality/outplots/reconstruction_quality_results_by_policy.csv}{}
 {\csvcoli & \csvcolii & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi}
+\end{singlespacing}
