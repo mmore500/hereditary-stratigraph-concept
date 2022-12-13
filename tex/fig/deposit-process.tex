@@ -1,8 +1,9 @@
+\input{lib/dissertationexclude.tex}
 \begin{figure*}
-  \begin{minipage}{0.6\textwidth}
+  \dissertationexclude{\begin{minipage}{0.6\textwidth}}
     \includegraphics[width=\textwidth]{img/deposit-process}
-  \end{minipage}%
-  \begin{minipage}{0.4\textwidth}
+  \dissertationexclude{\end{minipage}}%
+  \dissertationexclude{\begin{minipage}{0.4\textwidth}}
     \caption{
     Cartoon illustration of stratum deposit process.
     This process marks the elapse of a generation when a hereditary stratigraphic column is inherited by an offspring.
@@ -11,5 +12,5 @@
     Then, the column's configured stratum retention policy is applied to ``prune'' the column by eliminating strata from specific generations.
     Although this cartoon depicts an empty space for eliminated strata, the underlying data structure behind a column (i.e., the pink overlay) can condense to reduce space complexity.
     }\label{fig:deposit-process}
-  \end{minipage}
+  \dissertationexclude{\end{minipage}}
 \end{figure*}
