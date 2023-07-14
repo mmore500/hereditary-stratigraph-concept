@@ -11,6 +11,7 @@ RUN \
     && \
   apt-get install -qy --no-install-recommends \
     build-essential \
+    ca-certificates \
     gawk \
     libgmp3-dev \
     python3-dev \
@@ -20,6 +21,8 @@ RUN \
     git \
     && \
   rm -rf /var/lib/apt/lists/*
+
+RUN update-ca-certificates
 
 RUN \
   npm install -g \
