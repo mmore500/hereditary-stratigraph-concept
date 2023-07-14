@@ -12,6 +12,7 @@ RUN \
     libgmp3-dev \
     npm \
     python3-pip \
+    git \
     && \
   rm -rf /var/lib/apt/lists/*
 
