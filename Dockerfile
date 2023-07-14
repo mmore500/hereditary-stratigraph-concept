@@ -11,6 +11,7 @@ RUN \
     gawk \
     libgmp3-dev \
     npm \
+    python3-pip \
     && \
   rm -rf /var/lib/apt/lists/*
 
