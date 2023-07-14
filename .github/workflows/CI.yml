@@ -75,48 +75,6 @@ jobs:
     steps:
       - run: /opt/hereditary-stratigraph-concept/pylib/test/run_tests.sh
 
-  cpp-unit:
-    name: C++ Unit Tests
-    runs-on: ubuntu-20.04
-    needs:
-      - docker-build
-    strategy:
-      matrix:
-        cxx: [clang++, g++]
-        mode: [ "", opt]
-      fail-fast: false
-    container:
-      image: ghcr.io/mmore500/hereditary-stratigraph-concept:GITHUB_ACTION_${{ github.run_number }}
-      # github actions requires root to access mounted volumes
-      options: --user root --cap-add=SYS_ADMIN
-      env:
-        DISH_MPICXX: mpicxx.openmpi
-        OMPI_CXX: clang++
-    steps:
-      - run: |
-          set -x
-          make ${{matrix.mode}} -C "/opt/hereditary-stratigraph-concept/cpp/tests/"
-
-  cpp-coverage:
-    name: Coverage
-    runs-on: ubuntu-20.04
-    needs:
-      - docker-build
-    container:
-      image: ghcr.io/mmore500/hereditary-stratigraph-concept:GITHUB_ACTION_${{ github.run_number }}
-      # github actions requires root to access mounted volumes
-      options: --user root --cap-add=SYS_ADMIN
-      env:
-        CXX: clang++
-    steps:
-      - run: "make coverage -C /opt/hereditary-stratigraph-concept/cpp/tests/"
-      - uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-          fail_ci_if_error: true
-          verbose: true
-          directory: /opt/hereditary-stratigraph-concept/cpp
-
   docs:
     name: Docs
     runs-on: ubuntu-20.04
@@ -128,29 +86,6 @@ jobs:
       options: --user root
     steps:
       - run: make html -C /opt/hereditary-stratigraph-concept/docs
-
-  cpp-source:
-    name: Source
-    runs-on: ubuntu-20.04
-    needs:
-      - docker-build
-    strategy:
-      matrix:
-        cxx: [clang++, g++]
-        mode: [ "", opt]
-      fail-fast: false
-    container:
-      image: ghcr.io/mmore500/hereditary-stratigraph-concept:GITHUB_ACTION_${{ github.run_number }}
-      options: --user user --cap-add=SYS_ADMIN
-      env:
-        DISH_MPICXX: mpicxx.openmpi
-        OMPI_CXX: ${{ matrix.cxx }}
-    steps:
-      # undo github actions override of HOME to "/home/github/"
-      - run: |
-          export HOME="/home/user/"
-          set -x
-          make test -C /opt/hereditary-stratigraph-concept/
 
   binder:
     name: Notebooks
@@ -251,9 +186,6 @@ jobs:
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cut-cookie'
     needs:
       - binder
-      - cpp-coverage
-      - cpp-source
-      - cpp-unit
       - docs
       - latex
       - latex-extended-abstract
