@@ -1,4 +1,4 @@
-FROM mmore500/dishtiny:sha-7f3f5c8
+FROM ubuntu:22.04
 
 USER root
 
