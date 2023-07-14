@@ -15,7 +15,7 @@ RUN \
     gawk \
     libgmp3-dev \
     python3-dev \
-    python3-dev \
+    python3-pip \
     python3-setuptools \
     npm \
     git \
