@@ -148,37 +148,6 @@ jobs:
           name: manuscript-abstract
           path: tex-extended-abstract/hereditary-stratigraph-concept-draft.pdf
 
-  deploy-pages:
-    name: Deploy to GitHub Pages
-    runs-on: ubuntu-20.04
-    # disable auto-deploy because put content on gh pages branch manually
-    if: false #&& github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cut-cookie'
-    needs:
-      - binder
-      - cpp-coverage
-      - cpp-source
-      - cpp-unit
-      - docs
-      - latex
-      - latex-extended-abstract
-      - py-unit
-      - tidy
-    container:
-      image: ghcr.io/mmore500/hereditary-stratigraph-concept:GITHUB_ACTION_${{ github.run_number }}
-      # github actions requires root to access mounted volumes
-      options: --user root
-    steps:
-      - run: git init
-      - uses: fregante/setup-git-user@v1
-      - run: git commit --allow-empty -m "Initial commit"
-      - run: make web -C /opt/hereditary-stratigraph-concept/
-      - run: make badges -C /opt/hereditary-stratigraph-concept/
-      - run: cp -r /opt/hereditary-stratigraph-concept/cpp/web/ deploy/
-      - uses: JamesIves/github-pages-deploy-action@4.0.0
-        with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: deploy # The folder the action should deploy.
-          clean: true # Automatically remove deleted files from the deploy branch
 
   deploy-container:
     name: Deploy Container to ghcr.io
