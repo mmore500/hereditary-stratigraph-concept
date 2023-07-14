@@ -1,6 +1,8 @@
-FROM ubuntu:22.04
+FROM ubuntu:18.04
 
 USER root
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 COPY . /opt/hereditary-stratigraph-concept
 
@@ -12,8 +14,9 @@ RUN \
     gawk \
     libgmp3-dev \
     python3-dev \
+    python3-dev \
+    python3-setuptools \
     npm \
-    python3-pip \
     git \
     && \
   rm -rf /var/lib/apt/lists/*
