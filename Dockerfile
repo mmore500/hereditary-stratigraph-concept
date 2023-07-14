@@ -8,6 +8,7 @@ RUN \
   apt-get update -q --allow-unauthenticated \
     && \
   apt-get install -qy --no-install-recommends \
+    build-essential \
     gawk \
     libgmp3-dev \
     npm \
