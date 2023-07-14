@@ -10,3 +10,6 @@
 [submodule "tex/submodules/hstrat"]
   path = tex/submodules/hstrat
   url = https://github.com/mmore500/hstrat.git
+[submodule "binder/hstrat1x"]
+	path = binder/hstrat1x_src
+	url = https://github.com/mmore500/hstrat.git
