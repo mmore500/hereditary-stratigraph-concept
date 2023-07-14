@@ -11,6 +11,7 @@ RUN \
     build-essential \
     gawk \
     libgmp3-dev \
+    python3-dev \
     npm \
     python3-pip \
     git \
