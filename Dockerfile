@@ -19,6 +19,7 @@ RUN \
     python3-setuptools \
     npm \
     git \
+    rsync \
     && \
   rm -rf /var/lib/apt/lists/*
 
