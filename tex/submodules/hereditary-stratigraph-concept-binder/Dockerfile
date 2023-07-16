@@ -1,23 +1,35 @@
-FROM mmore500/dishtiny:sha-7f3f5c8
+FROM ubuntu:20.04
 
 USER root
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 COPY . /opt/hereditary-stratigraph-concept
+
+RUN \
+  apt-get update -q --allow-unauthenticated \
+    && \
+  apt-get install -qy --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    gawk \
+    libgmp3-dev \
+    python3-dev \
+    python3-pip \
+    python3-setuptools \
+    npm \
+    git \
+    rsync \
+    && \
+  rm -rf /var/lib/apt/lists/*
+
+RUN update-ca-certificates
 
 RUN \
   npm install -g \
     bibtex-tidy@1.8.5 \
     && \
   echo "installed npm dependencies"
-
-RUN \
-  apt-get update -q --allow-unauthenticated \
-    && \
-  apt-get install -qy --no-install-recommends \
-    gawk \
-    libgmp3-dev \
-    && \
-  rm -rf /var/lib/apt/lists/*
 
 RUN \
   python3 -m pip install -r /opt/hereditary-stratigraph-concept/requirements.txt \

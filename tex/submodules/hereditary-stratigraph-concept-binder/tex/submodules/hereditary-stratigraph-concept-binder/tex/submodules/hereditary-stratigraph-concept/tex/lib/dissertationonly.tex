@@ -1,0 +1,10 @@
+% \pragmaonce
+
+% adapted from https://www.overleaf.com/learn/latex/Commands
+\providecommand{\dissertationonly}[1]{%
+% adapted from https://tex.stackexchange.com/a/33577
+\ifdefined\DISSERTATION%
+#1%
+\else%
+\fi
+}

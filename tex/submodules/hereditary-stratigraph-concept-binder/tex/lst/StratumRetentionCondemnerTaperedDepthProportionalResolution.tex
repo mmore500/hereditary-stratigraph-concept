@@ -1,4 +1,7 @@
-{\onecolumn
+\provideenvironment{lstinputlistinghandle}{}{}
+
+{\makeatletter\if@twocolumn\onecolumn\fi\makeatother
+\begin{lstinputlistinghandle}
 \lstinputlisting[%
 language=Python,
 caption={
@@ -6,6 +9,7 @@ caption={
 },
 label={lst:StratumRetentionCondemnerTaperedDepthProportionalResolution},
 style=mypython,
-basicstyle=\scriptsize,
+basicstyle=\dissertationelse{\fontsize{9}{10}\selectfont}{\scriptsize},
 ]{submodules/hstrat/hstrat/hstrat/stratum_retention_condemners/StratumRetentionCondemnerTaperedDepthProportionalResolution.py}
+\end{lstinputlistinghandle}
 }
